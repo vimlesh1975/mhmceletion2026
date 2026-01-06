@@ -144,7 +144,7 @@ export default function SheetTable() {
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[2][0]}\\" /></componentData>`;
       var seat = 0;
       for (let i = 1; i < 7; i++) {
-        seat += rows[1][i];
+        seat += rows[2][i];
       }
 
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[2][7]}\\" /></componentData>`;
@@ -171,6 +171,64 @@ export default function SheetTable() {
 
     }}>Play Right</button>
 
+    <button onClick={() => {
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[3][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[3][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[3][7]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[3][i]}\\" /></componentData>`;
+      }
+
+
+      xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[4][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[4][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[4][7]}\\" /></componentData>`;
+
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[4][i]}\\" /></componentData>`;
+      }
+
+
+
+
+      xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[5][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[5][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[5][7]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[5][i]}\\" /></componentData>`;
+      }
+
+
+
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/bottom/bottom';
+
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-99 add 99 "${templateName}" 1 ${xml}`
+      });
+
+    }}>Play Bottom</button>
 
 
     <div className="table-wrapper">
