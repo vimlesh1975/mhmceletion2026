@@ -19,9 +19,11 @@ export default function SheetTable() {
   const [rows, setRows] = useState([]);
   // const [polling, setPolling] = useState(true); // ✅ toggle
   const [polling, setPolling] = useState(false); // ✅ toggle
+  const [pollingBottom, setPollingBottom] = useState(false); // ✅ toggle
 
 
   const intervalRef = useRef(null);
+  const intervalRefBottom = useRef(null);
 
   const endpoint = async (str) => {
     const requestOptions = {
@@ -63,6 +65,38 @@ export default function SheetTable() {
     };
   }, [polling]);
 
+
+  useEffect(() => {
+    if (!pollingBottom) return;
+    if (!rows.length) return;
+
+    const ROWS_PER_PAGE = 3;
+    const maxPage = Math.floor(rows.length / ROWS_PER_PAGE);
+
+    let page = 0; // ✅ zero-based index
+
+    intervalRefBottom.current = setInterval(() => {
+      const startIndex = page * ROWS_PER_PAGE;
+
+      playBottom(startIndex);
+
+      // 🔁 rotate cleanly (NO PAUSE)
+      page = (page + 1) % maxPage;
+
+    }, 5000);
+
+    return () => {
+      if (intervalRefBottom.current) {
+        clearInterval(intervalRefBottom.current);
+        intervalRefBottom.current = null;
+      }
+    };
+  }, [pollingBottom, rows]);
+
+
+
+
+
   const sendToCaspar = (str) => {
     endpoint({
       action: 'endpoint',
@@ -70,10 +104,82 @@ export default function SheetTable() {
     });
   }
 
+  const getSeat = (row) => {
+    let seat = 0;
+    for (let i = 1; i < 7; i++) seat += Number(row[i] || 0);
+    return seat;
+  };
+
+
+  const playBottom = (j) => {
+
+    if (!rows.length) return;
+
+    const maxRow = rows.length - 1;
+    if (j + 5 > maxRow) return; // prevent overflow
+
+    let xml = '';
+    var rowNO = 3 + j;
+
+    xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+    var seat = getSeat(rows[rowNO]);
+
+
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+    }
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+
+
+    var rowNO = 4 + j;
+    xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+
+
+    var seat = getSeat(rows[rowNO]);
+
+
+    xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+
+
+
+    var rowNO = 5 + j;
+
+    xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+
+
+    var seat = getSeat(rows[rowNO]);
+
+    xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+
+
+
+    xml = `"<templateData>${xml}</templateData>"`
+    const templateName = 'mhmceletion2026/bottom/bottom';
+
+    endpoint({
+      action: "endpoint",
+      command: `cg 1-99 add 99 "${templateName}" 1 ${xml}`
+    });
+
+  }
+
 
   return (<>
 
-    {/* ✅ Polling toggle */}
     <label style={{ display: "block", marginBottom: 8 }}>
       <input
         type="checkbox"
@@ -89,10 +195,8 @@ export default function SheetTable() {
       let xml = '';
       let rowNO = 0;
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = 0;
-      for (let i = 1; i < 7; i++) {
-        seat += rows[rowNO][i];
-      }
+      var seat = getSeat(rows[rowNO]);
+
 
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
@@ -118,10 +222,7 @@ export default function SheetTable() {
       let rowNO = 1;
 
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = 0;
-      for (let i = 1; i < 7; i++) {
-        seat += rows[rowNO][i];
-      }
+      var seat = getSeat(rows[rowNO]);
 
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
@@ -147,10 +248,8 @@ export default function SheetTable() {
       let rowNO = 2;
 
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = 0;
-      for (let i = 1; i < 7; i++) {
-        seat += rows[rowNO][i];
-      }
+      var seat = getSeat(rows[rowNO]);
+
 
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
@@ -177,69 +276,18 @@ export default function SheetTable() {
     }}>Play Right</button>
 
     <button onClick={() => {
-      let xml = '';
-      var rowNO = 3;
-
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = 0;
-      for (let i = 1; i < 7; i++) {
-        seat += rows[rowNO][i];
-      }
-
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-      }
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-
-      xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = 0;
-      var rowNO = 4;
-
-      for (let i = 1; i < 7; i++) {
-        seat += rows[4][i];
-      }
-
-      xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-
-      var seat = 0;
-      var rowNO = 5;
-
-      xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-
-
-      for (let i = 1; i < 7; i++) {
-        seat += rows[rowNO][i];
-      }
-
-      xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-
-
-      xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/bottom/bottom';
-
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-99 add 99 "${templateName}" 1 ${xml}`
-      });
-
+      const k = 0;
+      playBottom(k * 3)
     }}>Play Bottom</button>
+
+    <label style={{ display: "block", marginBottom: 8 }}>
+      <input
+        type="checkbox"
+        checked={pollingBottom}
+        onChange={e => setPollingBottom(e.target.checked)}
+      />
+      &nbsp;Auto refresh (5 sec)
+    </label>
 
 
     <div className="table-wrapper">
