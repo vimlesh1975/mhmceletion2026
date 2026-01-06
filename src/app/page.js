@@ -82,6 +82,9 @@ export default function SheetTable() {
       />
       &nbsp;Auto refresh (5 sec)
     </label>
+
+    <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
+
     <button onClick={() => {
       let xml = '';
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[0][0]}\\" /></componentData>`;
@@ -107,8 +110,68 @@ export default function SheetTable() {
         command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
       });
 
-    }}>Play</button>
-    <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
+    }}>Play Top</button>
+
+    <button onClick={() => {
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[1][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[1][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[1][7]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[1][i]}\\" /></componentData>`;
+      }
+
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/left/left';
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-97 add 97 "${templateName}" 1 ${xml}`
+      });
+
+    }}>Play Left</button>
+
+    <button onClick={() => {
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[2][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[1][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[2][7]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[2][i]}\\" /></componentData>`;
+      }
+
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/left/left';
+      endpoint({
+        action: "endpoint",
+        command: `mixer 1-98 fill 0.75 0 1 1`
+      });
+
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
+      });
+
+    }}>Play Right</button>
+
+
 
     <div className="table-wrapper">
       <table className="sheet-table">
