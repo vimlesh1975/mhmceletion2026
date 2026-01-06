@@ -87,20 +87,21 @@ export default function SheetTable() {
 
     <button onClick={() => {
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[0][0]}\\" /></componentData>`;
+      let rowNO = 0;
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = 0;
       for (let i = 1; i < 7; i++) {
-        seat += rows[0][i];
+        seat += rows[rowNO][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[0][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[0][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
       xml = `"<templateData>${xml}</templateData>"`
@@ -114,20 +115,22 @@ export default function SheetTable() {
 
     <button onClick={() => {
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[1][0]}\\" /></componentData>`;
+      let rowNO = 1;
+
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = 0;
       for (let i = 1; i < 7; i++) {
-        seat += rows[1][i];
+        seat += rows[rowNO][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[1][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[1][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
       xml = `"<templateData>${xml}</templateData>"`
@@ -141,20 +144,22 @@ export default function SheetTable() {
 
     <button onClick={() => {
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[2][0]}\\" /></componentData>`;
+      let rowNO = 2;
+
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = 0;
       for (let i = 1; i < 7; i++) {
-        seat += rows[2][i];
+        seat += rows[rowNO][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[2][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[2][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
       xml = `"<templateData>${xml}</templateData>"`
@@ -173,49 +178,55 @@ export default function SheetTable() {
 
     <button onClick={() => {
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[3][0]}\\" /></componentData>`;
+      var rowNO = 3;
+
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = 0;
       for (let i = 1; i < 7; i++) {
-        seat += rows[3][i];
+        seat += rows[rowNO][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[3][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[3][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
 
-      xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[4][0]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = 0;
+      var rowNO = 4;
+
       for (let i = 1; i < 7; i++) {
         seat += rows[4][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[4][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[4][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
 
-
-
-      xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[5][0]}\\" /></componentData>`;
       var seat = 0;
+      var rowNO = 5;
+
+      xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+
+
       for (let i = 1; i < 7; i++) {
-        seat += rows[5][i];
+        seat += rows[rowNO][i];
       }
 
-      xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[5][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[5][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
 
