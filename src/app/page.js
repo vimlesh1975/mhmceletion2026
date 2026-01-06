@@ -10,7 +10,8 @@ const headers = [
   "काँग्रेस",
   "राकाँपा",
   "मनसे",
-  "इतर"
+  "इतर",
+  "Totoal"
 ];
 
 
@@ -84,6 +85,12 @@ export default function SheetTable() {
     <button onClick={() => {
       let xml = '';
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[0][0]}\\" /></componentData>`;
+      var seat = 0;
+      for (let i = 1; i < 7; i++) {
+        seat += rows[0][i];
+      }
+
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[0][7]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;

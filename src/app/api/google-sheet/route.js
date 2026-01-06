@@ -3,7 +3,7 @@ import axios from "axios";
 export async function GET() {
     try {
         const SHEET_ID = "1c2uaAxetGTFXmQ2A9jm-ZMcW9-smVVCFZkohnuA3DH8";
-        const RANGE = "C3:I39";
+        const RANGE = "C3:J39";
 
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&range=${RANGE}`;
 
