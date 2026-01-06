@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Document</title>
+                            <script name="graphics-data-definition" type="application/json+gdd">
+    {"$schema": "https://superflytv.github.io/GraphicsDataDefinition/gdd-meta-schema/v1/schema.json",
+    "designerSoftware":"RCC",
+    "type": "object",
+    "properties": {"ccgc1n":{"type":"string","label":"label","description":"textbox","default":"c1n","gddType":"single-line","pattern":""},"ccgp1n":{"type":"string","label":"label","description":"textbox","default":"p1n","gddType":"single-line","pattern":""},"ccgp2n":{"type":"string","label":"label","description":"textbox","default":"p2n","gddType":"single-line","pattern":""},"ccgp3n":{"type":"string","label":"label","description":"textbox","default":"p3n","gddType":"single-line","pattern":""},"ccgp4n":{"type":"string","label":"label","description":"textbox","default":"p4n","gddType":"single-line","pattern":""},"ccgp5n":{"type":"string","label":"label","description":"textbox","default":"p5n","gddType":"single-line","pattern":""},"ccgp6n":{"type":"string","label":"label","description":"textbox","default":"p6n","gddType":"single-line","pattern":""},"ccgc1s":{"type":"string","label":"label","description":"textbox","default":"c1s","gddType":"single-line","pattern":""},"ccgp1s":{"type":"string","label":"label","description":"textbox","default":"p1s","gddType":"single-line","pattern":""},"ccgp2s":{"type":"string","label":"label","description":"textbox","default":"p2s","gddType":"single-line","pattern":""},"ccgp3s":{"type":"string","label":"label","description":"textbox","default":"p3s","gddType":"single-line","pattern":""},"ccgp4s":{"type":"string","label":"label","description":"textbox","default":"p4s","gddType":"single-line","pattern":""},"ccgp5s":{"type":"string","label":"label","description":"textbox","default":"p5s","gddType":"single-line","pattern":""},"ccgp6s":{"type":"string","label":"label","description":"textbox","default":"p6s","gddType":"single-line","pattern":""}}
+  }
+  </script>
+  <script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.gddSchema = JSON.parse(document.querySelector('head > script[name="graphics-data-definition"]').innerHTML);
+  });
+</script>
+
+                            <link rel="stylesheet" href="main.css">
+                                <link rel="stylesheet" href="main2.css">
+                                </head>
+                                <body>
+                                    <script>
+                                        document.body.addEventListener('keypress', function(e) {
+                if(e.key.toUpperCase() === "S") {stop(); }
+              });
+                                        if (screen.colorDepth === 0) {
+                var css = '[id^=ccg] {display: none; }',
+                                        head = document.head || document.getElementsByTagName('head')[0],
+                                        style = document.createElement('style');
+                                        head.appendChild(style);
+                                        style.type = 'text/css';
+                                        if (style.styleSheet) {
+                                            // This is required for IE8 and below.
+                                            style.styleSheet.cssText = css;
+                } else {
+                                            style.appendChild(document.createTextNode(css));
+                }
+            }
+
+                                        const elementToObserve = document.body;
+            const observer = new MutationObserver(() => {
+                                            document.body.style.margin = '0';
+                                        document.body.style.padding = '0';
+                                        document.body.style.overflow = 'hidden';
+                                        var aa = document.getElementsByTagName('div')[0];
+                                        aa.style.zoom=(192000/1920)+'%';
+                                        observer.disconnect();
+            });
+                                        observer.observe(elementToObserve, {subtree: true, childList: true })
+
+                                        var dataCaspar = { };
+
+                                        function escapeHtml(unsafe) {
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+                                    // Parse templateData into an XML object
+                                    function parseCaspar(str) {
+            var xmlDoc;
+                                    if (window.DOMParser) {
+                                        parser = new DOMParser();
+                                    xmlDoc = parser.parseFromString(str, "text/xml");
+            }
+                                    dataCaspar = XML2JSON(xmlDoc.documentElement.childNodes);
+            }
+
+
+                                    // Make the XML templateData message into a more simple key:value object
+                                    function XML2JSON(node) {
+            var data = { }; // resulting object
+                                    for (k = 0; k < node.length; k++) {
+            var idCaspar = node[k].getAttribute("id");
+                                    var valCaspar = node[k].childNodes[0].getAttribute("value");
+                                    if (idCaspar != undefined && valCaspar != undefined) {
+                                        data[idCaspar] = valCaspar;
+            };
+            }
+                                    return data;
+            }
+
+                                    // Main function to insert data
+                                    function dataInsert(dataCaspar) {
+                                      for (var idCaspar in dataCaspar) {
+                                          var idTemplate = document.getElementById(idCaspar);
+                                          if (idTemplate != undefined) {
+                                              var idtext = idTemplate.getElementsByTagName('text')[0];
+                                              var idimage = idTemplate.getElementsByTagName('image')[0];
+                          
+                                              if (idtext != undefined) {
+                                                  const lines =idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+                                                  if (lines === '1') {
+                                                      idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = escapeHtml(dataCaspar[idCaspar]);
+                                                      idTemplate.style.display = "block";
+                                                      if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                                                          var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                                                          var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                          var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                                                          if (textalign1 == 'center') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                                                          }
+                                                          if (textalign1 == 'right') {
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                                                              idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                                                              idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                                                          }
+                                                          idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                                                          do {
+                                                              var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                                                              idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                                                              var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                                                          } while (width2 > width1);
+                                                      }
+                                                  }
+                                                  else {
+                                                    idTemplate.style.display = "block";
+                                                    var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = 1;
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
+                                                    var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                                                    var initialX = existingTspans[0].getAttribute('x');
+                                                    var initialY = existingTspans[0].getAttribute('y');
+                                                    var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                                                    var newData = escapeHtml(dataCaspar[idCaspar]);
+                                                    var dataSegments = newData.split('CRLF');
+                                                    var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                                                    var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
+                        
+                                                    function splitTextIntoLines(text, maxWidth) {
+                                                        var words = text.split(' ');
+                                                        var lines = [];
+                                                        var currentLine = '';
+                                                        words.forEach(function (word) {
+                                                            var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                                                            var testWidth = textElement.getSubStringLength(0, testLine.length);
+                        
+                                                            if (testWidth > maxWidth) {
+                                                                lines.push(currentLine);
+                                                                currentLine = word;
+                                                            } else {
+                                                                currentLine = testLine;
+                                                            }
+                                                        });
+                                                        lines.push(currentLine);
+                                                        return lines;
+                                                    }
+                        
+                                                    var tspans = [];
+                                                    var previoustxtlines = 0;
+                        
+                                                    dataSegments.forEach(function (segment, i) {
+                                                        if (segment.trim() === '') {
+                                                          segment=' ';
+                                                        }
+                                                        textElement.innerHTML = segment;
+                                                        var txtlines = splitTextIntoLines(segment, maxWidth);
+                                                        txtlines.forEach(function (line, j) {
+                                                            var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                            tspan.textContent = line;
+                                                            tspan.setAttribute('x', initialX);
+                                                            tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                                                            tspans.push(tspan);
+                                                        });
+                                                        previoustxtlines += txtlines.length;
+                                                    });
+                                                    textElement.innerHTML = '';
+                                                    if (tspans.length === 1) {
+                                                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                                                        tspan.textContent = ' ';
+                                                        tspan.setAttribute('x', initialX);
+                                                        tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                                                        tspans.push(tspan);
+                                                    }
+                        
+                                                    tspans.forEach(function (tspan) {
+                                                        textElement.appendChild(tspan);
+                                                    });
+                                                    var ctm = textElement.parentNode.getCTM();
+                                                    ctm.d = (maxHeight / textElement.getBBox().height);
+                                                    textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+                                                  }
+                                                  
+                                              }
+                          
+                                              else if (idimage != undefined) {
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('xlink:href', escapeHtml(dataCaspar[idCaspar]));
+                                                  idTemplate.getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                                  idTemplate.style.display = "block";
+                                              }
+                                          }
+                                      }
+                                  }
+
+                                    // Call for a update of data from CasparCG client
+                                    function update(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
+            }
+
+                                    // insert data from CasparCg client when activated
+                                    function play(str) {
+                                        parseCaspar(str); // Parse templateData into an XML object
+                                    dataInsert(dataCaspar); // Insert data
+            // gwd.actions.timeline.gotoAndPlay('document.body', 'start');
+            }
+                                    function stop() {
+                                        document.body.innerHTML = '' ;
+            }
+                                    function updatestring(str1, str2) {
+            var idTemplate = document.getElementById(str1);
+
+            const lines = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('lines');
+            if (lines === '1') {
+                idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].innerHTML = str2;
+                idTemplate.style.display = "block";
+                if (idTemplate.getElementsByTagName('extraproperty')[0] != undefined) {
+                    var textalign1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('textalign');
+                    var width1 = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                    var originalFontSize = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('originalfontsize');
+                    if (textalign1 == 'center') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = "normal";
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', '0');
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'middle');
+                    }
+                    if (textalign1 == 'right') {
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('xml:space', 'preserve1');
+                        idTemplate.getElementsByTagName('text')[0].style.whiteSpace = 'normal';
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('x', width1 / 2);
+                        idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].setAttribute('text-anchor', 'end');
+                    }
+                    idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', originalFontSize);
+                    do {
+                        var dd = idTemplate.getElementsByTagName('text')[0].getAttribute('font-size');
+                        idTemplate.getElementsByTagName('text')[0].setAttribute('font-size', dd - 1);
+                        var width2 = idTemplate.getElementsByTagName('text')[0].getElementsByTagName('tspan')[0].getBBox().width;
+                    } while (width2 > width1);
+                }
+            }
+            else {
+                idTemplate.style.display = "block";
+                var textElement = idTemplate.getElementsByTagName('text')[0];
+
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = 1;
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+
+                var existingTspans = Array.from(textElement.getElementsByTagName('tspan'));
+                var initialX = existingTspans[0].getAttribute('x');
+                var initialY = existingTspans[0].getAttribute('y');
+                var initialDy = existingTspans[1].getAttribute('y') - existingTspans[0].getAttribute('y');
+                var newData = str2;
+                var dataSegments = newData.split('CRLF');
+                var maxWidth = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('width');
+                var maxHeight = idTemplate.getElementsByTagName('extraproperty')[0].getAttribute('height');
+
+                function splitTextIntoLines(text, maxWidth) {
+                    var words = text.split(' ');
+                    var lines = [];
+                    var currentLine = '';
+                    words.forEach(function (word) {
+                        var testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
+                        var testWidth = textElement.getSubStringLength(0, testLine.length);
+
+                        if (testWidth > maxWidth) {
+                            lines.push(currentLine);
+                            currentLine = word;
+                        } else {
+                            currentLine = testLine;
+                        }
+                    });
+                    lines.push(currentLine);
+                    return lines;
+                }
+
+                var tspans = [];
+                var previoustxtlines = 0;
+
+                dataSegments.forEach(function (segment, i) {
+                    if (segment.trim() === '') {
+                        segment = ' ';
+                    }
+                    textElement.innerHTML = segment;
+                    var txtlines = splitTextIntoLines(segment, maxWidth);
+                    txtlines.forEach(function (line, j) {
+                        var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.textContent = line;
+                        tspan.setAttribute('x', initialX);
+                        tspan.setAttribute('y', parseInt(initialY) + (parseInt(initialDy) * (previoustxtlines + j)));
+                        tspans.push(tspan);
+                    });
+                    previoustxtlines += txtlines.length;
+                });
+                textElement.innerHTML = '';
+                if (tspans.length === 1) {
+                    var tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                    tspan.textContent = ' ';
+                    tspan.setAttribute('x', initialX);
+                    tspan.setAttribute('y', parseInt(initialY) + parseInt(initialDy));
+                    tspans.push(tspan);
+                }
+
+                tspans.forEach(function (tspan) {
+                    textElement.appendChild(tspan);
+                });
+                var ctm = textElement.parentNode.getCTM();
+                ctm.d = (maxHeight / textElement.getBBox().height);
+                textElement.parentNode.transform.baseVal.initialize(textElement.parentNode.ownerSVGElement.createSVGTransformFromMatrix(ctm));
+            }
+         
+        }
+                                    function updateimage(str1, str2) {
+                                        document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('xlink:href', str2);
+                                    document.getElementById(str1).getElementsByTagName('image')[0].setAttribute('preserveAspectRatio', 'none');
+                                    document.getElementById(str1).style.display = "block";
+            }
+
+                                </script>
+                                <div> <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1920" height="1080" viewBox="0 0 1920 1080" xml:space="preserve">
+<desc>Created with Fabric.js 6.6.5</desc>
+<defs>
+</defs>
+<g transform="matrix(0.495 0 0 8.0674 234.9971 484.0997)" id="rect_356"  >
+<filter id="SVGID_185" y="-60.11%" height="220.22%" x="-23.21%" width="146.42000000000002%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<rect style="stroke: rgb(255,255,255); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(5,27,125); fill-rule: nonzero; opacity: 0.9;filter: url(#SVGID_185);" vector-effect="non-scaling-stroke"  class="rect_356" x="-467.5" y="-37.4" rx="10" ry="10" width="935" height="74.8" />
+</g>
+<g transform="matrix(1 0 0 1 236.2648 227.3039)" style="filter: url(#SVGID_186);" id="ccgc1n"  >
+<filter id="SVGID_186" y="-79%" height="258%" x="-27.08%" width="154.16%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="center" width="423.7765" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_849" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-38.7708" y="14.1363" >c1n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 366.0626)" style="filter: url(#SVGID_187);" id="ccgp1n"  >
+<filter id="SVGID_187" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_498" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p1n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 435.4419)" style="filter: url(#SVGID_188);" id="ccgp2n"  >
+<filter id="SVGID_188" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_873" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p2n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 519.8222)" style="filter: url(#SVGID_189);" id="ccgp3n"  >
+<filter id="SVGID_189" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_460" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p3n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 609.8278)" style="filter: url(#SVGID_190);" id="ccgp4n"  >
+<filter id="SVGID_190" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_853" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p4n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 696.0832)" style="filter: url(#SVGID_191);" id="ccgp5n"  >
+<filter id="SVGID_191" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_556" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p5n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 158.7567 744.8362)" style="filter: url(#SVGID_192);" id="ccgp6n"  >
+<filter id="SVGID_192" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_551" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p6n</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 225.9516 283.3495)" style="filter: url(#SVGID_193);" id="ccgc1s"  >
+<filter id="SVGID_193" y="-79%" height="258%" x="-27.66%" width="155.32%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="center" width="391.8995" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_714" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-37.5403" y="14.1363" >c1s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 373.3552)" style="filter: url(#SVGID_194);" id="ccgp1s"  >
+<filter id="SVGID_194" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_945" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p1s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 463.3608)" style="filter: url(#SVGID_195);" id="ccgp2s"  >
+<filter id="SVGID_195" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_839" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p2s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 517.7392)" style="filter: url(#SVGID_196);" id="ccgp3s"  >
+<filter id="SVGID_196" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_780" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p3s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 573.9927)" style="filter: url(#SVGID_197);" id="ccgp4s"  >
+<filter id="SVGID_197" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_628" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p4s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 673.3739)" style="filter: url(#SVGID_198);" id="ccgp5s"  >
+<filter id="SVGID_198" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_330" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p5s</tspan></text>
+</g>
+<g transform="matrix(1 0 0 1 421.0013 729.6274)" style="filter: url(#SVGID_199);" id="ccgp6s"  >
+<filter id="SVGID_199" y="-79%" height="258%" x="-31.54%" width="163.07999999999998%" >
+	<feGaussianBlur in="SourceAlpha" stdDeviation="15"></feGaussianBlur>
+	<feOffset dx="0" dy="0" result="oBlur" ></feOffset>
+	<feFlood flood-color="rgb(0,0,0)" flood-opacity="1"/>
+	<feComposite in2="oBlur" operator="in" />
+	<feMerge>
+		<feMergeNode></feMergeNode>
+		<feMergeNode in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<extraproperty textAlign="left" width="260.0225" originalFontSize="45" lines='1' height="50.849999999999994"></extraproperty>
+		<text xml:space="preserve" class="textbox_612" font-family="Arial" font-size="45" font-style="normal" font-weight="bold" style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1; white-space: pre;" ><tspan x="-130.0112" y="14.1363" >p6s</tspan></text>
+</g>
+</svg>  </div>
+                            </body>
+                            <script src="main.js"></script>
+                            <script src="main2.js"></script>
+                        </html>
