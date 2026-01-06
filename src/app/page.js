@@ -3,6 +3,17 @@
 import { useEffect, useState, useRef } from "react";
 import "./page.css"
 
+const headers = [
+  "district/party",
+  "भाजप",
+  "शिवसेना",
+  "काँग्रेस",
+  "राकाँपा",
+  "मनसे",
+  "इतर"
+];
+
+
 export default function SheetTable() {
   const [rows, setRows] = useState([]);
   // const [polling, setPolling] = useState(true); // ✅ toggle
@@ -10,6 +21,19 @@ export default function SheetTable() {
 
 
   const intervalRef = useRef(null);
+
+  const endpoint = async (str) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(str),
+    };
+    await fetch('/api/casparcg', requestOptions);
+    if (str.action === 'connect' || str.action === 'disconnect') {
+    }
+  };
 
 
   const fetchSheet = async () => {
@@ -38,15 +62,13 @@ export default function SheetTable() {
     };
   }, [polling]);
 
-  const headers = [
-    "district/party",
-    "भाजप",
-    "शिवसेना",
-    "काँग्रेस",
-    "राकाँपा",
-    "मनसे",
-    "इतर"
-  ];
+  const sendToCaspar = (str) => {
+    endpoint({
+      action: 'endpoint',
+      command: str,
+    });
+  }
+
 
   return (<>
 
@@ -59,7 +81,27 @@ export default function SheetTable() {
       />
       &nbsp;Auto refresh (5 sec)
     </label>
+    <button onClick={() => {
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[0][0]}\\" /></componentData>`;
 
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[0][i]}\\" /></componentData>`;
+      }
+
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/top/top';
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
+      });
+
+    }}>Play</button>
+    <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
 
     <div className="table-wrapper">
       <table className="sheet-table">

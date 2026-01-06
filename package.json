@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.13.2",
+    "casparcg-connection": "^5.1.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "googleapis": "^169.0.0",
