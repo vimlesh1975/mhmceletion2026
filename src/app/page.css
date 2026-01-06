@@ -1,0 +1,50 @@
+.table-wrapper {
+    max-height: 500px;
+    max-width: 600px;
+    /* 👈 control visible height */
+    overflow-y: auto;
+    /* vertical scroll */
+    overflow-x: auto;
+    border: 1px solid #ccc;
+}
+
+/* Google Sheet look */
+.sheet-table {
+    border-collapse: collapse;
+    width: max-content;
+    /* important for fixed column width */
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+/* Fixed column width */
+.sheet-table th,
+.sheet-table td {
+    border: 1px solid #d0d0d0;
+    padding: 4px;
+    width: 50px;
+    /* 👈 COLUMN WIDTH */
+    min-width: 50px;
+    max-width: 50px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* First column (district name) – OPTIONAL */
+.sheet-table th:first-child,
+.sheet-table td:first-child {
+    width: 150px;
+    /* district names need space */
+    min-width: 150px;
+    max-width: 150px;
+    text-align: left;
+    font-weight: 500;
+}
+
+/* Sticky header (like Google Sheet) */
+.sheet-table thead th {
+    position: sticky;
+    top: 0;
+    background: #f1f3f4;
+    z-index: 2;
+}

@@ -1,32 +1,86 @@
+'use client'
 
-"use client";
+import { useEffect, useState, useRef } from "react";
+import "./page.css"
 
-import { useEffect, useRef } from "react";
-import io from "socket.io-client";
+export default function SheetTable() {
+  const [rows, setRows] = useState([]);
+  // const [polling, setPolling] = useState(true); // ✅ toggle
+  const [polling, setPolling] = useState(false); // ✅ toggle
 
-export default function Home() {
 
-  const socketRef = useRef(null);
+  const intervalRef = useRef(null);
+
+
+  const fetchSheet = async () => {
+    const res = await fetch("/api/google-sheet");
+    const data = await res.json();
+    setRows(data);
+  };
 
   useEffect(() => {
+    fetchSheet();
+  }, [])
 
-    socketRef.current = io();
-    const socket = socketRef.current;
 
-    if (!socket) return;
+  useEffect(() => {
+    // 🔁 START polling
+    if (polling) {
+      intervalRef.current = setInterval(fetchSheet, 5000);
+    }
 
-    // socket.emit("allContent", allContent);
-    socket.on("test", (data) => {
-      // dispatch(changenewdatabase(data));
-      console.log(data)
+    // 🛑 STOP polling
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [polling]);
 
-    });
+  const headers = [
+    "district/party",
+    "भाजप",
+    "शिवसेना",
+    "काँग्रेस",
+    "राकाँपा",
+    "मनसे",
+    "इतर"
+  ];
 
-  })
+  return (<>
 
-  return (
-    <div >
-      <h1>Hello</h1>
+    {/* ✅ Polling toggle */}
+    <label style={{ display: "block", marginBottom: 8 }}>
+      <input
+        type="checkbox"
+        checked={polling}
+        onChange={e => setPolling(e.target.checked)}
+      />
+      &nbsp;Auto refresh (5 sec)
+    </label>
+
+
+    <div className="table-wrapper">
+      <table className="sheet-table">
+        <thead>
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+
+        <tbody>
+          {rows.map((row, rIdx) => (
+            <tr key={rIdx}>
+              {row.map((cell, cIdx) => (
+                <td key={cIdx}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  );
+  </>);
 }

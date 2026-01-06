@@ -9,9 +9,6 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 require('dotenv').config({ path: './.env.local' });
 
-let onlineCount = 0;
-let connectedClients = []; // store all sockets
-
 app.prepare().then(async () => {
     const server = express();
     const httpServer = http.createServer(server);
@@ -25,55 +22,26 @@ app.prepare().then(async () => {
     });
 
 
-    io.on('connection', (socket) => {
+    const axios = require("axios");
 
-        io.emit('test', "hello");
+    async function getSheetFromAPI() {
+        const res = await axios.get("http://localhost:3000/api/google-sheet");
+        return res.data;
+    }
 
+    io.on("connection", (socket) => {
 
-        const specialId = socket.handshake.query.specialId;
-        if (specialId === "browser-abc-123") {
-            connectedClients.push(socket.id);
-            onlineCount++;
-            io.emit('userCount', onlineCount);
-        }
-
-        socket.on('disconnectOthers', () => {
-            connectedClients.forEach(id => {
-                if (specialId === "browser-abc-123") {
-                    if (id !== socket.id) {
-                        io.sockets.sockets.get(id)?.disconnect(true);
-                    }
-                }
-
-            });
-            connectedClients = [socket.id]; // keep only this one
-        });
-
-        socket.on('ServerConnectionStatus', (data) => {
-            io.emit('ServerConnectionStatus2', data);
-        });
-
-
-
-        // Handle disconnection
-        socket.on('disconnect', () => {
-            console.log('User disconnected:', socket.id);
-
-            if (specialId === "browser-abc-123") {
-                setTimeout(() => {
-                    if (!socket.connected) {
-                        onlineCount--;
-                        io.emit('userCount', onlineCount);
-                    }
-                }, 3000); // waits 3 seconds before reducing
+        socket.on("getSheetData", async () => {
+            try {
+                const data = await getSheetFromAPI();
+                socket.emit("sheetData", data);
+            } catch (err) {
+                socket.emit("sheetError", "API error");
             }
-
-            socket.removeAllListeners();
-            socket.removeAllListeners('ServerConnectionStatus');
-
         });
 
     });
+
 
     // server.all('*', (req, res) => handle(req, res));
     server.use((req, res) => { handle(req, res); });
