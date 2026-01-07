@@ -193,11 +193,33 @@ export default function SheetTable() {
               {rows.map((row, rIdx) => (
                 <tr key={rIdx}>
                   {row.map((cell, cIdx) => (
-                    <td key={cIdx}>{cell}</td>
+                    <td key={cIdx}>
+                      <input
+                        type="text"
+                        value={cell}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setRows(prev => {
+                            const copy = [...prev];
+                            copy[rIdx] = [...copy[rIdx]];
+                            copy[rIdx][cIdx] = value;
+                            return copy;
+                          });
+                        }}
+                        style={{
+                          width: cIdx === 0 ? "140px" : "50px",
+                          border: "none",
+                          outline: "none",
+                          background: "transparent",
+                          textAlign: cIdx === 0 ? "left" : "center"
+                        }}
+                      />
+                    </td>
                   ))}
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
       </div>
