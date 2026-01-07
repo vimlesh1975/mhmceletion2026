@@ -24,6 +24,9 @@ export default function SheetTable() {
   const intervalRef = useRef(null);
   const intervalRefBottom = useRef(null);
 
+  const bottomPageRef = useRef(0);
+
+
   const endpoint = async (str) => {
     const requestOptions = {
       method: 'POST',
@@ -64,23 +67,22 @@ export default function SheetTable() {
     };
   }, [polling]);
 
-
   useEffect(() => {
     if (!pollingBottom) return;
     if (!rows.length) return;
 
     const ROWS_PER_PAGE = 3;
-    const maxPage = Math.floor(rows.length / ROWS_PER_PAGE);
 
-    let page = 0; // ✅ zero-based index
+    const maxPage = Math.floor(rows.length / ROWS_PER_PAGE);
+    if (maxPage === 0) return;
 
     intervalRefBottom.current = setInterval(() => {
-      const startIndex = page * ROWS_PER_PAGE;
+      const startIndex = bottomPageRef.current * ROWS_PER_PAGE;
 
       playBottom(startIndex);
 
-      // 🔁 rotate cleanly (NO PAUSE)
-      page = (page + 1) % maxPage;
+      bottomPageRef.current =
+        (bottomPageRef.current + 1) % maxPage;
 
     }, 5000);
 
@@ -90,7 +92,7 @@ export default function SheetTable() {
         intervalRefBottom.current = null;
       }
     };
-  }, [pollingBottom, rows]);
+  }, [pollingBottom]); // 🔥 rows REMOVED
 
 
 
