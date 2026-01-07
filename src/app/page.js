@@ -9,8 +9,8 @@ const headers = [
   "शिवसेना",
   "राकाँपा",
   "काँग्रेस",
-  "SSUBT",
-  "NCPSP",
+  "शिवसेना(उबाठा)",
+  "राष्ट्रवादी(शप)",
   "मनसे",
   "इतर",
   "Total"
@@ -22,10 +22,11 @@ export default function SheetTable() {
   const [polling, setPolling] = useState(false); // ✅ toggle
 
   const intervalRef = useRef(null);
+
+  const topIntervalRef = useRef(null);
   const leftIntervalRef = useRef(null);
   const rightIntervalRef = useRef(null);
   const bottomIntervalRef = useRef(null);
-  const topIntervalRef = useRef(null);
 
   const endpoint = async (str) => {
     const requestOptions = {
@@ -80,34 +81,46 @@ export default function SheetTable() {
     return seat;
   };
 
+  const startPlayTopLoop = () => {
+    if (!rows.length) return;
+
+    // 👇 ONLY rows you are sure exist
+    const rowSequence = [0];
+    let seqIndex = 0;
+
+    const playRow = (rowNO) => {
+      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+      var seat = getSeat(rows[rowNO]);
 
 
-  const playTop = () => {
-    let xml = '';
-    let rowNO = 0;
-    xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-    var seat = getSeat(rows[rowNO]);
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
 
-    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+      }
 
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-    }
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/top/top';
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
+      });
+    };
 
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-    }
+    // ▶️ play first row immediately
+    playRow(rowSequence[seqIndex]);
 
-    xml = `"<templateData>${xml}</templateData>"`
-    const templateName = 'mhmceletion2026/top/top';
-    endpoint({
-      action: "endpoint",
-      command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
-    });
-
-  }
-
+    topIntervalRef.current = setInterval(() => {
+      seqIndex = (seqIndex + 1) % rowSequence.length;
+      playRow(rowSequence[seqIndex]);
+    }, 5000);
+  };
 
 
   const startPlayLeftLoop = () => {
@@ -255,6 +268,7 @@ export default function SheetTable() {
           <table className="sheet-table">
             <thead>
               <tr>
+                <th></th>
                 {headers.map((h, i) => (
                   <th key={i}>{h}</th>
                 ))}
@@ -263,6 +277,7 @@ export default function SheetTable() {
             <tbody>
               {rows.map((row, rIdx) => (
                 <tr key={rIdx}>
+                  <td>{rIdx + 1}</td>
                   {row.map((cell, cIdx) => (
                     <td key={cIdx}>
                       <input
@@ -305,12 +320,33 @@ export default function SheetTable() {
           &nbsp;Get data from Google Sheet (5 sec)
         </label>
 
-        <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
+        <button onClick={() => {
+          sendToCaspar(`clear 1`);
+
+          if (topIntervalRef.current) {
+            clearInterval(topIntervalRef.current);
+            topIntervalRef.current = null;
+          }
+
+          if (leftIntervalRef.current) {
+            clearInterval(leftIntervalRef.current);
+            leftIntervalRef.current = null;
+          }
+          if (rightIntervalRef.current) {
+            clearInterval(rightIntervalRef.current);
+            rightIntervalRef.current = null;
+          }
+          if (bottomIntervalRef.current) {
+            clearInterval(bottomIntervalRef.current);
+            bottomIntervalRef.current = null;
+          }
+
+        }}>Stop All</button>
 
         <div style={{ border: '1px solid red' }}>
           <h3> Top</h3>
           <button onClick={() => {
-            playTop()
+            startPlayTopLoop();
 
           }}>Play Top</button>
 

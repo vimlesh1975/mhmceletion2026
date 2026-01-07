@@ -23,9 +23,9 @@
 .sheet-table td {
     border: 1px solid #d0d0d0;
     padding: 4px;
-    width: 50px;
+    /* width: 50px; */
     /* 👈 COLUMN WIDTH */
-    min-width: 60px;
+    min-width: 10px;
     /* max-width: 50px; */
     text-align: center;
     white-space: nowrap;
@@ -35,7 +35,7 @@
 .sheet-table th:first-child,
 .sheet-table td:first-child {
     /* district names need space */
-    min-width: 120px;
+    /* min-width: 120px; */
     /* max-width: 150px; */
     text-align: left;
     font-weight: 500;
