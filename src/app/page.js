@@ -33,7 +33,7 @@ export default function SheetTable() {
   const intervalRefBottom = useRef(null);
   const intervalRefTop = useRef(null);
   const leftIntervalRef = useRef(null);
-  const intervalRefRight = useRef(null);
+  const rightIntervalRef = useRef(null);
 
   const bottomPageRef = useRef(0);
 
@@ -192,69 +192,89 @@ export default function SheetTable() {
   const startPlayLeftLoop = () => {
     if (!rows.length) return;
 
-    let index = 5; // start from row 5
+    // 👇 ONLY rows you are sure exist
+    const rowSequence = [1, 2, 3, 5];
+    let seqIndex = 0;
 
     const playRow = (rowNO) => {
+      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
       let xml = '';
-
       xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       const seat = getSeat(rows[rowNO]);
-
       xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][9]}\\" /></componentData>`;
-
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i] ?? ""}\\" /></componentData>`;
       }
-
       xml = `"<templateData>${xml}</templateData>"`;
-
       endpoint({
         action: "endpoint",
         command: `cg 1-97 add 97 "mhmceletion2026/left/left" 1 ${xml}`
       });
     };
 
-    // play immediately
-    playRow(index);
+    // ▶️ play first row immediately
+    playRow(rowSequence[seqIndex]);
 
     leftIntervalRef.current = setInterval(() => {
-      index = index === 5 ? 6 : 5; // toggle
-      playRow(index);
+      seqIndex = (seqIndex + 1) % rowSequence.length;
+      playRow(rowSequence[seqIndex]);
+    }, 5000);
+  };
+
+
+  const startPlayRightLoop = () => {
+    if (!rows.length) return;
+
+    // 👇 ONLY rows you are sure exist
+    const rowSequence = [4, 6, 7, 18, 20, 21];
+    let seqIndex = 0;
+
+    const playRow = (rowNO) => {
+      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+      let xml = '';
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+      var seat = getSeat(rows[rowNO]);
+
+
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      }
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+      }
+
+      xml = `"<templateData>${xml}</templateData>"`
+      const templateName = 'mhmceletion2026/left/left';
+      endpoint({
+        action: "endpoint",
+        command: `mixer 1-98 fill 0.75 0 1 1`
+      });
+
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
+      });
+    }
+
+    // ▶️ play first row immediately
+    playRow(rowSequence[seqIndex]);
+
+    rightIntervalRef.current = setInterval(() => {
+      seqIndex = (seqIndex + 1) % rowSequence.length;
+      playRow(rowSequence[seqIndex]);
     }, 5000);
   };
 
 
 
+
+
   const playRight = () => {
-    let xml = '';
-    let rowNO = 2;
-
-    xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-    var seat = getSeat(rows[rowNO]);
-
-
-    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
-
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-    }
-
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-    }
-
-    xml = `"<templateData>${xml}</templateData>"`
-    const templateName = 'mhmceletion2026/left/left';
-    endpoint({
-      action: "endpoint",
-      command: `mixer 1-98 fill 0.75 0 1 1`
-    });
-
-    endpoint({
-      action: "endpoint",
-      command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
-    });
+    // startPlayRightLoop();
 
   }
 
@@ -399,6 +419,10 @@ export default function SheetTable() {
           }}>Update</button>
 
           <button onClick={() => {
+            if (leftIntervalRef.current) {
+              clearInterval(leftIntervalRef.current);
+              leftIntervalRef.current = null;
+            }
             endpoint({
               action: "endpoint",
               command: `cg 1-97 stop 97`
@@ -420,7 +444,7 @@ export default function SheetTable() {
           <h3> Right</h3>
 
           <button onClick={() => {
-            playRight();
+            startPlayRightLoop();
           }}>Play Right</button>
 
           <button onClick={() => {
@@ -450,6 +474,11 @@ export default function SheetTable() {
 
           }}>Update</button>
           <button onClick={() => {
+
+            if (rightIntervalRef.current) {
+              clearInterval(rightIntervalRef.current);
+              rightIntervalRef.current = null;
+            }
             endpoint({
               action: "endpoint",
               command: `cg 1-98 stop 98`
