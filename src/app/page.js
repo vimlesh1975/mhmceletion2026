@@ -19,6 +19,7 @@ const headers = [
 
 export default function SheetTable() {
   const [rows, setRows] = useState([]);
+  const [formrows, setFormRows] = useState([]);
   const [polling, setPolling] = useState(false); // ✅ toggle
 
   const intervalRef = useRef(null);
@@ -47,10 +48,22 @@ export default function SheetTable() {
     const data = await res.json();
     setRows(data);
   };
-
   useEffect(() => {
     fetchSheet();
   }, [])
+
+
+
+  const fetchformSheet = async () => {
+    const res = await fetch("/api/formResponce");
+    const data = await res.json();
+    setFormRows(data);
+    console.log(data)
+  };
+  useEffect(() => {
+    fetchformSheet();
+  }, [])
+
 
 
   useEffect(() => {
