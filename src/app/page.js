@@ -77,7 +77,7 @@ export default function SheetTable() {
 
   const getSeat = (row) => {
     let seat = 0;
-    for (let i = 1; i < 7; i++) seat += Number(row[i] || 0);
+    for (let i = 1; i < 9; i++) seat += Number(row[i] || 0);
     return seat;
   };
 
@@ -97,11 +97,11 @@ export default function SheetTable() {
 
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
 
@@ -136,7 +136,7 @@ export default function SheetTable() {
       xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       const seat = getSeat(rows[rowNO]);
       xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][9]}\\" /></componentData>`;
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
         xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i] ?? ""}\\" /></componentData>`;
       }
@@ -169,18 +169,13 @@ export default function SheetTable() {
       let xml = '';
       xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       var seat = getSeat(rows[rowNO]);
-
-
       xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
-
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
       }
-
       xml = `"<templateData>${xml}</templateData>"`
       const templateName = 'mhmceletion2026/left/left';
       endpoint({
@@ -227,18 +222,18 @@ export default function SheetTable() {
         xml += `<componentData id=\\"ccgc${block + 1}n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
         xml += `<componentData id=\\"ccgc${block + 1}s\\"><data id=\\"text\\" value=\\"${seat}/${total}\\" /></componentData>`;
 
-        for (let i = 1; i < 7; i++) {
+        for (let i = 1; i < 9; i++) {
           xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
         }
 
-        for (let i = 1; i < 7; i++) {
+        for (let i = 1; i < 9; i++) {
           xml += `<componentData id=\\"ccgc${block + 1}p${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
         }
 
       }
 
       // 🔹 WRITE PARTY NAMES LAST
-      for (let i = 1; i < 7; i++) {
+      for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
 
