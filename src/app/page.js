@@ -131,7 +131,7 @@ export default function SheetTable() {
     var rowNO = 3 + j;
     xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
     var seat = getSeat(rows[rowNO]);
-    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
     for (let i = 1; i < 7; i++) {
       xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
     }
@@ -141,14 +141,14 @@ export default function SheetTable() {
     var rowNO = 4 + j;
     xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
     var seat = getSeat(rows[rowNO]);
-    xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
     for (let i = 1; i < 7; i++) {
       xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
     }
     var rowNO = 5 + j;
     xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
     var seat = getSeat(rows[rowNO]);
-    xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
     for (let i = 1; i < 7; i++) {
       xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
     }
@@ -168,7 +168,7 @@ export default function SheetTable() {
     var seat = getSeat(rows[rowNO]);
 
 
-    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
     for (let i = 1; i < 7; i++) {
       xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -200,7 +200,7 @@ export default function SheetTable() {
       xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
       const seat = getSeat(rows[rowNO]);
 
-      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][7]}\\" /></componentData>`;
+      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][9]}\\" /></componentData>`;
 
       for (let i = 1; i < 7; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -234,7 +234,7 @@ export default function SheetTable() {
     var seat = getSeat(rows[rowNO]);
 
 
-    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
     for (let i = 1; i < 7; i++) {
       xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -331,7 +331,7 @@ export default function SheetTable() {
             var seat = getSeat(rows[rowNO]);
 
 
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
             for (let i = 1; i < 7; i++) {
               xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -380,7 +380,7 @@ export default function SheetTable() {
             xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
             var seat = getSeat(rows[rowNO]);
 
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
             for (let i = 1; i < 7; i++) {
               xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -431,7 +431,7 @@ export default function SheetTable() {
             var seat = getSeat(rows[rowNO]);
 
 
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
             for (let i = 1; i < 7; i++) {
               xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -488,7 +488,7 @@ export default function SheetTable() {
             var seat = getSeat(rows[rowNO]);
 
 
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
             for (let i = 1; i < 7; i++) {
               xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
@@ -506,7 +506,7 @@ export default function SheetTable() {
             var seat = getSeat(rows[rowNO]);
 
 
-            xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
 
             for (let i = 1; i < 7; i++) {
@@ -522,7 +522,7 @@ export default function SheetTable() {
 
             var seat = getSeat(rows[rowNO]);
 
-            xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+            xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
 
             for (let i = 1; i < 7; i++) {
               xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
