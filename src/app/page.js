@@ -11,13 +11,12 @@ const headers = [
   "राकाँपा",
   "मनसे",
   "इतर",
-  "Totoal"
+  "Total"
 ];
 
 
 export default function SheetTable() {
   const [rows, setRows] = useState([]);
-  // const [polling, setPolling] = useState(true); // ✅ toggle
   const [polling, setPolling] = useState(false); // ✅ toggle
   const [pollingBottom, setPollingBottom] = useState(false); // ✅ toggle
 
@@ -179,137 +178,142 @@ export default function SheetTable() {
 
 
   return (<>
-
-    <label style={{ display: "block", marginBottom: 8 }}>
-      <input
-        type="checkbox"
-        checked={polling}
-        onChange={e => setPolling(e.target.checked)}
-      />
-      &nbsp;Auto refresh (5 sec)
-    </label>
-
-    <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
-
-    <button onClick={() => {
-      let xml = '';
-      let rowNO = 0;
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = getSeat(rows[rowNO]);
-
-
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-      }
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-      xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/top/top';
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
-      });
-
-    }}>Play Top</button>
-
-    <button onClick={() => {
-      let xml = '';
-      let rowNO = 1;
-
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = getSeat(rows[rowNO]);
-
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-      }
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-      xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/left/left';
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-97 add 97 "${templateName}" 1 ${xml}`
-      });
-
-    }}>Play Left</button>
-
-    <button onClick={() => {
-      let xml = '';
-      let rowNO = 2;
-
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = getSeat(rows[rowNO]);
-
-
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-      }
-
-      for (let i = 1; i < 7; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-      }
-
-      xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/left/left';
-      endpoint({
-        action: "endpoint",
-        command: `mixer 1-98 fill 0.75 0 1 1`
-      });
-
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
-      });
-
-    }}>Play Right</button>
-
-    <button onClick={() => {
-      const k = 0;
-      playBottom(k * 3)
-    }}>Play Bottom</button>
-
-    <label style={{ display: "block", marginBottom: 8 }}>
-      <input
-        type="checkbox"
-        checked={pollingBottom}
-        onChange={e => setPollingBottom(e.target.checked)}
-      />
-      &nbsp;Auto refresh (5 sec)
-    </label>
-
-
-    <div className="table-wrapper">
-      <table className="sheet-table">
-        <thead>
-          <tr>
-            {headers.map((h, i) => (
-              <th key={i}>{h}</th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {rows.map((row, rIdx) => (
-            <tr key={rIdx}>
-              {row.map((cell, cIdx) => (
-                <td key={cIdx}>{cell}</td>
+    <div style={{ display: 'flex' }}>
+      <div>
+        <div className="table-wrapper">
+          <table className="sheet-table">
+            <thead>
+              <tr>
+                {headers.map((h, i) => (
+                  <th key={i}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, rIdx) => (
+                <tr key={rIdx}>
+                  {row.map((cell, cIdx) => (
+                    <td key={cIdx}>{cell}</td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <label style={{ display: "block", marginBottom: 8 }}>
+          <input
+            type="checkbox"
+            checked={polling}
+            onChange={e => setPolling(e.target.checked)}
+          />
+          &nbsp;Get data from Google Sheet (5 sec)
+        </label>
+
+        <button onClick={() => sendToCaspar(`clear 1`)}>Stop All</button>
+
+        <button onClick={() => {
+          let xml = '';
+          let rowNO = 0;
+          xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+          var seat = getSeat(rows[rowNO]);
+
+
+          xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+          }
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+          }
+
+          xml = `"<templateData>${xml}</templateData>"`
+          const templateName = 'mhmceletion2026/top/top';
+          endpoint({
+            action: "endpoint",
+            command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
+          });
+
+        }}>Play Top</button>
+
+        <button onClick={() => {
+          let xml = '';
+          let rowNO = 1;
+
+          xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+          var seat = getSeat(rows[rowNO]);
+
+          xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+          }
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+          }
+
+          xml = `"<templateData>${xml}</templateData>"`
+          const templateName = 'mhmceletion2026/left/left';
+          endpoint({
+            action: "endpoint",
+            command: `cg 1-97 add 97 "${templateName}" 1 ${xml}`
+          });
+
+        }}>Play Left</button>
+
+        <button onClick={() => {
+          let xml = '';
+          let rowNO = 2;
+
+          xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+          var seat = getSeat(rows[rowNO]);
+
+
+          xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+          }
+
+          for (let i = 1; i < 7; i++) {
+            xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+          }
+
+          xml = `"<templateData>${xml}</templateData>"`
+          const templateName = 'mhmceletion2026/left/left';
+          endpoint({
+            action: "endpoint",
+            command: `mixer 1-98 fill 0.75 0 1 1`
+          });
+
+          endpoint({
+            action: "endpoint",
+            command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
+          });
+
+        }}>Play Right</button>
+
+        <button onClick={() => {
+          const k = 0;
+          playBottom(k * 3)
+        }}>Play Bottom</button>
+
+        <label style={{ display: "block", marginBottom: 8 }}>
+          <input
+            type="checkbox"
+            checked={pollingBottom}
+            onChange={e => setPollingBottom(e.target.checked)}
+          />
+          &nbsp;Send Bottom data (5 sec)
+        </label>
+      </div>
+
     </div>
+
   </>);
 }
