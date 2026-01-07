@@ -32,7 +32,7 @@ export default function SheetTable() {
   const intervalRef = useRef(null);
   const intervalRefBottom = useRef(null);
   const intervalRefTop = useRef(null);
-  const intervalRefLeft = useRef(null);
+  const leftIntervalRef = useRef(null);
   const intervalRefRight = useRef(null);
 
   const bottomPageRef = useRef(0);
@@ -124,14 +124,111 @@ export default function SheetTable() {
 
 
   const playBottom = (j) => {
-
     if (!rows.length) return;
-
     const maxRow = rows.length - 1;
     if (j + 5 > maxRow) return; // prevent overflow
-
     let xml = '';
     var rowNO = 3 + j;
+    xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+    var seat = getSeat(rows[rowNO]);
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+    }
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+    var rowNO = 4 + j;
+    xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+    var seat = getSeat(rows[rowNO]);
+    xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+    var rowNO = 5 + j;
+    xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+    var seat = getSeat(rows[rowNO]);
+    xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+    xml = `"<templateData>${xml}</templateData>"`
+    const templateName = 'mhmceletion2026/bottom/bottom';
+    endpoint({
+      action: "endpoint",
+      command: `cg 1-99 add 99 "${templateName}" 1 ${xml}`
+    });
+
+  }
+
+  const playTop = () => {
+    let xml = '';
+    let rowNO = 0;
+    xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+    var seat = getSeat(rows[rowNO]);
+
+
+    xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+    }
+
+    for (let i = 1; i < 7; i++) {
+      xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+    }
+
+    xml = `"<templateData>${xml}</templateData>"`
+    const templateName = 'mhmceletion2026/top/top';
+    endpoint({
+      action: "endpoint",
+      command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
+    });
+
+  }
+
+
+
+  const startPlayLeftLoop = () => {
+    if (!rows.length) return;
+
+    let index = 5; // start from row 5
+
+    const playRow = (rowNO) => {
+      let xml = '';
+
+      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+      const seat = getSeat(rows[rowNO]);
+
+      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][7]}\\" /></componentData>`;
+
+      for (let i = 1; i < 7; i++) {
+        xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+      }
+
+      xml = `"<templateData>${xml}</templateData>"`;
+
+      endpoint({
+        action: "endpoint",
+        command: `cg 1-97 add 97 "mhmceletion2026/left/left" 1 ${xml}`
+      });
+    };
+
+    // play immediately
+    playRow(index);
+
+    leftIntervalRef.current = setInterval(() => {
+      index = index === 5 ? 6 : 5; // toggle
+      playRow(index);
+    }, 5000);
+  };
+
+
+
+  const playRight = () => {
+    let xml = '';
+    let rowNO = 2;
 
     xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
     var seat = getSeat(rows[rowNO]);
@@ -147,48 +244,19 @@ export default function SheetTable() {
       xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
     }
 
-
-    var rowNO = 4 + j;
-    xml += `<componentData id=\\"${'ccgc2n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-
-
-    var seat = getSeat(rows[rowNO]);
-
-
-    xml += `<componentData id=\\"${'ccgc2s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgc2p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-    }
-
-
-
-    var rowNO = 5 + j;
-
-    xml += `<componentData id=\\"${'ccgc3n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-
-
-    var seat = getSeat(rows[rowNO]);
-
-    xml += `<componentData id=\\"${'ccgc3s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-    for (let i = 1; i < 7; i++) {
-      xml += `<componentData id=\\"${'ccgc3p' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-    }
-
-
-
     xml = `"<templateData>${xml}</templateData>"`
-    const templateName = 'mhmceletion2026/bottom/bottom';
+    const templateName = 'mhmceletion2026/left/left';
+    endpoint({
+      action: "endpoint",
+      command: `mixer 1-98 fill 0.75 0 1 1`
+    });
 
     endpoint({
       action: "endpoint",
-      command: `cg 1-99 add 99 "${templateName}" 1 ${xml}`
+      command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
     });
 
   }
-
 
   return (<>
     <div style={{ display: 'flex' }}>
@@ -252,28 +320,7 @@ export default function SheetTable() {
         <div style={{ border: '1px solid red' }}>
           <h3> Top</h3>
           <button onClick={() => {
-            let xml = '';
-            let rowNO = 0;
-            xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-            var seat = getSeat(rows[rowNO]);
-
-
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-            }
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-            }
-
-            xml = `"<templateData>${xml}</templateData>"`
-            const templateName = 'mhmceletion2026/top/top';
-            endpoint({
-              action: "endpoint",
-              command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
-            });
+            playTop()
 
           }}>Play Top</button>
 
@@ -322,28 +369,7 @@ export default function SheetTable() {
         <div style={{ border: '1px solid red' }}>
           <h3> Left</h3>
           <button onClick={() => {
-            let xml = '';
-            let rowNO = 1;
-
-            xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-            var seat = getSeat(rows[rowNO]);
-
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-            }
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-            }
-
-            xml = `"<templateData>${xml}</templateData>"`
-            const templateName = 'mhmceletion2026/left/left';
-            endpoint({
-              action: "endpoint",
-              command: `cg 1-97 add 97 "${templateName}" 1 ${xml}`
-            });
+            startPlayLeftLoop()
 
           }}>Play Left</button>
 
@@ -394,35 +420,7 @@ export default function SheetTable() {
           <h3> Right</h3>
 
           <button onClick={() => {
-            let xml = '';
-            let rowNO = 2;
-
-            xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-            var seat = getSeat(rows[rowNO]);
-
-
-            xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][7]}\\" /></componentData>`;
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-            }
-
-            for (let i = 1; i < 7; i++) {
-              xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
-            }
-
-            xml = `"<templateData>${xml}</templateData>"`
-            const templateName = 'mhmceletion2026/left/left';
-            endpoint({
-              action: "endpoint",
-              command: `mixer 1-98 fill 0.75 0 1 1`
-            });
-
-            endpoint({
-              action: "endpoint",
-              command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
-            });
-
+            playRight();
           }}>Play Right</button>
 
           <button onClick={() => {
