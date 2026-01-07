@@ -306,6 +306,7 @@ export default function SheetTable() {
       </div>
 
       <div>
+        <button onClick={fetchSheet}>Read Once</button>
         <label style={{ display: "block", marginBottom: 8 }}>
           <input
             type="checkbox"
