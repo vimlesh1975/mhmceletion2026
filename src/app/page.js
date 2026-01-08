@@ -9,8 +9,8 @@ const headers = [
   "शिवसेना",
   "राकाँपा",
   "काँग्रेस",
-  "शिवसेना(उबाठा)",
-  "राष्ट्रवादी(शप)",
+  "उबाठा",
+  "श प",
   "मनसे",
   "इतर",
   "Total"
@@ -36,10 +36,17 @@ export default function SheetTable() {
   const autoWriteIntervalRef = useRef(null);
 
   const rowsRef = useRef([]);
-
   useEffect(() => {
     rowsRef.current = rows;
   }, [rows]);
+
+  const formrowsRef = useRef([]);
+  useEffect(() => {
+    formrowsRef.current = formrows;
+  }, [formrows]);
+
+
+
 
 
 
@@ -348,18 +355,31 @@ export default function SheetTable() {
         autoWriteIntervalRef.current = null;
       }
     };
-  }, [autoWriteresponse, formrows]);
+  }, [autoWriteresponse]);
+
+  const writingRef = useRef(false);
 
   const writetoDisplaySheet = async () => {
-    if (!formrows.length) return;
-    const partyOnlyRows = formrows.map(row => row.slice(1, 9));
-    await fetch("/api/update-google-sheet",
-      {
+    if (writingRef.current) return;
+    if (!formrowsRef.current.length) return;
+
+    writingRef.current = true;
+
+    try {
+      const partyOnlyRows = formrowsRef.current.map(row => row.slice(1, 9));
+      await fetch("/api/update-google-sheet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ range: "Sheet1!D4:L32", values: partyOnlyRows })
+        body: JSON.stringify({
+          range: "Sheet1!D4:L32",
+          values: partyOnlyRows
+        })
       });
-  }
+    } finally {
+      writingRef.current = false;
+    }
+  };
+
 
 
   return (<>
