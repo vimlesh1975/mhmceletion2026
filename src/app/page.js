@@ -55,7 +55,7 @@ export default function SheetTable() {
 
 
   const fetchformSheet = async () => {
-    const res = await fetch("/api/formResponce");
+    const res = await fetch("/api/google-form-sheet");
     const data = await res.json();
     setFormRows(data);
     console.log(data)
