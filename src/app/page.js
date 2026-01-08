@@ -111,25 +111,6 @@ export default function SheetTable() {
     };
   }, [autoreadresponse]);
 
-
-
-  useEffect(() => {
-    // 🔁 START polling
-    if (!formrows.length) return;
-
-    if (autoWriteresponse) {
-      autoWriteIntervalRef.current = setInterval(writetoDisplaySheet, 5000);
-    }
-
-    // 🛑 STOP polling
-    return () => {
-      if (autoWriteIntervalRef.current) {
-        clearInterval(autoWriteIntervalRef.current);
-        autoWriteIntervalRef.current = null;
-      }
-    };
-  }, [autoWriteresponse]);
-
   const sendToCaspar = (str) => {
     endpoint({
       action: 'endpoint',
@@ -155,15 +136,15 @@ export default function SheetTable() {
 
       let xml = '';
 
-      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\\" /></componentData>`;
+      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
 
       const seat = getSeat(currentRows[rowNO]);
 
-      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\\" /></componentData>`;
+      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\" /></componentData>`;
 
       for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\\" /></componentData>`;
-        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
       }
 
       xml = `"<templateData>${xml}</templateData>"`;
@@ -180,6 +161,7 @@ export default function SheetTable() {
     // 🛑 clear old interval if any
     if (topIntervalRef.current) {
       clearInterval(topIntervalRef.current);
+      topIntervalRef.current = null;
     }
 
     topIntervalRef.current = setInterval(() => {
@@ -190,21 +172,23 @@ export default function SheetTable() {
 
 
   const startPlayLeftLoop = () => {
-    if (!rows.length) return;
+    if (!rowsRef.current.length) return;
 
     // 👇 ONLY rows you are sure exist
     const rowSequence = [1, 2, 3, 5];
     let seqIndex = 0;
 
     const playRow = (rowNO) => {
-      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+      const currentRows = rowsRef.current;
+
+      if (!currentRows[rowNO]) return; // 🛡️ CRITICAL SAFETY
       let xml = '';
-      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      const seat = getSeat(rows[rowNO]);
-      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${rows[rowNO][9]}\\" /></componentData>`;
+      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
+      const seat = getSeat(currentRows[rowNO]);
+      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\" /></componentData>`;
       for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i] ?? ""}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i] ?? ""}\\" /></componentData>`;
       }
       xml = `"<templateData>${xml}</templateData>"`;
       endpoint({
@@ -216,6 +200,11 @@ export default function SheetTable() {
     // ▶️ play first row immediately
     playRow(rowSequence[seqIndex]);
 
+    if (leftIntervalRef.current) {
+      clearInterval(leftIntervalRef.current);
+      leftIntervalRef.current = null;
+    }
+
     leftIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
       playRow(rowSequence[seqIndex]);
@@ -224,23 +213,26 @@ export default function SheetTable() {
 
 
   const startPlayRightLoop = () => {
-    if (!rows.length) return;
+    if (!rowsRef.current.length) return;
+
 
     // 👇 ONLY rows you are sure exist
     const rowSequence = [4, 6, 7, 18, 20, 21];
     let seqIndex = 0;
 
     const playRow = (rowNO) => {
-      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+      const currentRows = rowsRef.current;
+
+      if (!currentRows[rowNO]) return; // 🛡️ CRITICAL SAFETY
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = getSeat(rows[rowNO]);
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
+      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
+      var seat = getSeat(currentRows[rowNO]);
+      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + currentRows[rowNO][9]}\\" /></componentData>`;
       for (let i = 1; i < 9; i++) {
         xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
       }
       for (let i = 1; i < 9; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
       }
       xml = `"<templateData>${xml}</templateData>"`
       const templateName = 'mhmceletion2026/left/left';
@@ -258,6 +250,10 @@ export default function SheetTable() {
     // ▶️ play first row immediately
     playRow(rowSequence[seqIndex]);
 
+    if (rightIntervalRef.current) {
+      clearInterval(rightIntervalRef.current);
+      rightIntervalRef.current = null;
+    }
     rightIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
       playRow(rowSequence[seqIndex]);
@@ -266,13 +262,16 @@ export default function SheetTable() {
 
 
   const startPlayBottomLoop = () => {
-    if (!rows.length) return;
+    if (!rowsRef.current.length) return;
+
 
     const rowSequence = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 22, 23, 24, 25, 26, 27, 28];
     const ROWS_PER_PAGE = 3;
     let pageIndex = 0;
 
     const playPage = (start) => {
+      const currentRows = rowsRef.current;
+
       if (rowSequence[start] === undefined || rowSequence[start + 1] === undefined || rowSequence[start + 2] === undefined) return;
 
       let xml = '';
@@ -280,20 +279,20 @@ export default function SheetTable() {
       // 🔹 WRITE ROW DATA FIRST (IMPORTANT)
       for (let block = 0; block < 3; block++) {
         const rowNO = rowSequence[start + block];
-        if (!rows[rowNO]) return;
+        if (!currentRows[rowNO]) return;
 
-        const seat = getSeat(rows[rowNO]);
-        const total = rows[rowNO][9];
+        const seat = getSeat(currentRows[rowNO]);
+        const total = currentRows[rowNO][9];
 
-        xml += `<componentData id=\\"ccgc${block + 1}n\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgc${block + 1}n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
         xml += `<componentData id=\\"ccgc${block + 1}s\\"><data id=\\"text\\" value=\\"${seat}/${total}\\" /></componentData>`;
 
         for (let i = 1; i < 9; i++) {
-          xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+          xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
         }
 
         for (let i = 1; i < 9; i++) {
-          xml += `<componentData id=\\"ccgc${block + 1}p${i}s\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+          xml += `<componentData id=\\"ccgc${block + 1}p${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
         }
 
       }
@@ -313,6 +312,11 @@ export default function SheetTable() {
 
     // ▶️ Play first page immediately
     playPage(pageIndex);
+
+    if (bottomIntervalRef.current) {
+      clearInterval(bottomIntervalRef.current);
+      bottomIntervalRef.current = null;
+    }
 
     bottomIntervalRef.current = setInterval(() => {
       pageIndex += ROWS_PER_PAGE;
