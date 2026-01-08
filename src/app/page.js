@@ -20,7 +20,10 @@ const headers = [
 export default function SheetTable() {
   const [rows, setRows] = useState([]);
   const [formrows, setFormRows] = useState([]);
-  const [polling, setPolling] = useState(false); // ✅ toggle
+  const [polling, setPolling] = useState(false);
+
+  const [autoreadresponse, setautoreadresponse] = useState(false);
+  const [autoWriteresponse, setautoWriteresponse] = useState(false);
 
   const intervalRef = useRef(null);
 
@@ -28,6 +31,17 @@ export default function SheetTable() {
   const leftIntervalRef = useRef(null);
   const rightIntervalRef = useRef(null);
   const bottomIntervalRef = useRef(null);
+
+  const autoReadIntervalRef = useRef(null);
+  const autoWriteIntervalRef = useRef(null);
+
+  const rowsRef = useRef([]);
+
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
+
+
 
   const endpoint = async (str) => {
     const requestOptions = {
@@ -81,6 +95,41 @@ export default function SheetTable() {
     };
   }, [polling]);
 
+
+  useEffect(() => {
+    // 🔁 START polling
+    if (autoreadresponse) {
+      autoReadIntervalRef.current = setInterval(fetchformSheet, 5000);
+    }
+
+    // 🛑 STOP polling
+    return () => {
+      if (autoReadIntervalRef.current) {
+        clearInterval(autoReadIntervalRef.current);
+        autoReadIntervalRef.current = null;
+      }
+    };
+  }, [autoreadresponse]);
+
+
+
+  useEffect(() => {
+    // 🔁 START polling
+    if (!formrows.length) return;
+
+    if (autoWriteresponse) {
+      autoWriteIntervalRef.current = setInterval(writetoDisplaySheet, 5000);
+    }
+
+    // 🛑 STOP polling
+    return () => {
+      if (autoWriteIntervalRef.current) {
+        clearInterval(autoWriteIntervalRef.current);
+        autoWriteIntervalRef.current = null;
+      }
+    };
+  }, [autoWriteresponse]);
+
   const sendToCaspar = (str) => {
     endpoint({
       action: 'endpoint',
@@ -95,39 +144,43 @@ export default function SheetTable() {
   };
 
   const startPlayTopLoop = () => {
-    if (!rows.length) return;
+    if (!rowsRef.current.length) return;
 
-    // 👇 ONLY rows you are sure exist
     const rowSequence = [0];
     let seqIndex = 0;
 
     const playRow = (rowNO) => {
-      if (!rows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+      const currentRows = rowsRef.current;
+      if (!currentRows[rowNO]) return;
+
       let xml = '';
-      xml += `<componentData id=\\"${'ccgc1n'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][0]}\\" /></componentData>`;
-      var seat = getSeat(rows[rowNO]);
 
+      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\\" /></componentData>`;
 
-      xml += `<componentData id=\\"${'ccgc1s'}\\"><data id=\\"text\\" value=\\"${seat + "/" + rows[rowNO][9]}\\" /></componentData>`;
+      const seat = getSeat(currentRows[rowNO]);
 
-      for (let i = 1; i < 9; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 'n'}\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-      }
+      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\\" /></componentData>`;
 
       for (let i = 1; i < 9; i++) {
-        xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${rows[rowNO][i]}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\\" /></componentData>`;
       }
 
-      xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/top/top';
+      xml = `"<templateData>${xml}</templateData>"`;
+
       endpoint({
         action: "endpoint",
-        command: `cg 1-96 add 96 "${templateName}" 1 ${xml}`
+        command: `cg 1-96 add 96 "mhmceletion2026/top/top" 1 ${xml}`
       });
     };
 
-    // ▶️ play first row immediately
+    // ▶️ immediate
     playRow(rowSequence[seqIndex]);
+
+    // 🛑 clear old interval if any
+    if (topIntervalRef.current) {
+      clearInterval(topIntervalRef.current);
+    }
 
     topIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
@@ -267,26 +320,43 @@ export default function SheetTable() {
       playPage(pageIndex);
     }, 5000);
   };
+
+
+  useEffect(() => {
+    // 🛑 Always clear existing interval first
+    if (autoWriteIntervalRef.current) {
+      clearInterval(autoWriteIntervalRef.current);
+      autoWriteIntervalRef.current = null;
+    }
+
+    // ❌ Do not start if disabled or no data
+    if (!autoWriteresponse || !formrows.length) return;
+
+    // 🔁 Start interval
+    autoWriteIntervalRef.current = setInterval(() => {
+      writetoDisplaySheet();
+    }, 5000);
+
+    // 🧹 Cleanup
+    return () => {
+      if (autoWriteIntervalRef.current) {
+        clearInterval(autoWriteIntervalRef.current);
+        autoWriteIntervalRef.current = null;
+      }
+    };
+  }, [autoWriteresponse, formrows]);
+
   const writetoDisplaySheet = async () => {
-
-    const rowsToWrite = [
-      ["Mumbai", 10,],
-      ["Nagpur", 8,]
-    ]
+    if (!formrows.length) return;
     const partyOnlyRows = formrows.map(row => row.slice(1, 9));
-    // console.log(partyOnlyRows)
-
-
-    await fetch("/api/update-google-sheet", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        range: "Sheet1!N4:U32",
-        values: partyOnlyRows
-      })
-    });
-
+    await fetch("/api/update-google-sheet",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ range: "Sheet1!D4:L32", values: partyOnlyRows })
+      });
   }
+
 
   return (<>
     <div style={{ display: 'flex' }}>
@@ -504,6 +574,25 @@ export default function SheetTable() {
         <div>
           <button onClick={fetchformSheet}>Get form Responses</button>
           <button onClick={writetoDisplaySheet}>write to Display Sheet</button>
+
+          <label style={{ display: "inline", marginBottom: 8 }}>
+            <input
+              type="checkbox"
+              checked={autoreadresponse}
+              onChange={e => setautoreadresponse(e.target.checked)}
+            />
+            &nbsp;Auto read
+          </label>
+
+          <label style={{ display: "inline", marginBottom: 8 }}>
+            <input
+              type="checkbox"
+              checked={autoWriteresponse}
+              onChange={e => setautoWriteresponse(e.target.checked)}
+            />
+            &nbsp;Auto Write
+          </label>
+
         </div>
 
 
