@@ -238,7 +238,7 @@ export default function SheetTable() {
       const templateName = 'mhmceletion2026/left/left';
       endpoint({
         action: "endpoint",
-        command: `mixer 1-98 fill 0.75 0 1 1`
+        command: `mixer 1-98 fill 0.78 0 1 1`
       });
 
       endpoint({
