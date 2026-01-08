@@ -58,7 +58,7 @@ export default function SheetTable() {
     const res = await fetch("/api/google-form-sheet");
     const data = await res.json();
     setFormRows(data);
-    console.log(data)
+    // console.log(data)
   };
   useEffect(() => {
     fetchformSheet();
@@ -267,7 +267,26 @@ export default function SheetTable() {
       playPage(pageIndex);
     }, 5000);
   };
+  const writetoDisplaySheet = async () => {
 
+    const rowsToWrite = [
+      ["Mumbai", 10,],
+      ["Nagpur", 8,]
+    ]
+    const partyOnlyRows = formrows.map(row => row.slice(1, 9));
+    // console.log(partyOnlyRows)
+
+
+    await fetch("/api/update-google-sheet", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        range: "Sheet1!N4:U32",
+        values: partyOnlyRows
+      })
+    });
+
+  }
 
   return (<>
     <div style={{ display: 'flex' }}>
@@ -318,7 +337,7 @@ export default function SheetTable() {
         </div>
       </div>
 
-      <div>
+      <div style={{ minWidth: 150 }}>
         <button onClick={fetchSheet}>Read Once</button>
         <label style={{ display: "block", marginBottom: 8 }}>
           <input
@@ -326,7 +345,7 @@ export default function SheetTable() {
             checked={polling}
             onChange={e => setPolling(e.target.checked)}
           />
-          &nbsp;Get data from Google Sheet (5 sec)
+          &nbsp;Google Sheet
         </label>
 
         <button onClick={() => {
@@ -437,6 +456,58 @@ export default function SheetTable() {
           }}>Stop</button>
         </div>
       </div>
-    </div>
+
+      <div>
+        <div style={{ marginLeft: 10 }}>
+          <div className="table-wrapper">
+            <table className="sheet-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Municipal</th>
+
+                  {headers.slice(1, 9).map((h, i) => (
+                    <th key={i}>{h}</th>
+                  ))}
+
+                  <th>Timestamp</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {formrows.map((row, rIdx) => (
+                  <tr key={rIdx}>
+                    <td>{rIdx + 1}</td>
+
+                    {/* Municipal */}
+                    <td style={{ textAlign: "left" }}>{row[0]}</td>
+
+                    {/* Party values */}
+                    {row.slice(1, 9).map((cell, cIdx) => (
+                      <td key={cIdx} style={{ textAlign: "center" }}>
+                        {cell}
+                      </td>
+                    ))}
+
+                    {/* Timestamp */}
+                    <td>{row[9]}</td>
+
+                    {/* Email */}
+                    <td>{row[10]}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <button onClick={fetchformSheet}>Get form Responses</button>
+          <button onClick={writetoDisplaySheet}>write to Display Sheet</button>
+        </div>
+
+
+      </div>
+    </div >
   </>);
 }
