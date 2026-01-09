@@ -604,16 +604,22 @@ export default function SheetTable() {
         </div>
         <div style={{ border: '1px solid red' }}>
           <h3>Save , Open</h3>
-
           <button onClick={saveRowsToFile}>Save Rows JSON</button>
-
           <input
             type="file"
             accept="application/json"
             onChange={loadRowsFromFile}
           />
+        </div>
+
+        <div style={{ border: '1px solid red' }}>
+          <h3>Test</h3>
+          <button onClick={() => {
+            sendToCaspar(`play 1-1 amb loop`)
+          }}>Play BG</button>
 
         </div>
+
       </div>
 
       <div>
