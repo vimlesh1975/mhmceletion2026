@@ -7,7 +7,7 @@ const headers = [
   "district/party",
   "भाजप",
   "शिवसेना",
-  "राकाँपा",
+  "राष्ट्रवादी",
   "काँग्रेस",
   "उबाठा",
   "श प",
@@ -131,10 +131,24 @@ export default function SheetTable() {
     return seat;
   };
 
+  const getPartyTotals = () => {
+    const currentRows = rowsRef.current;
+
+    const totals = Array(8).fill(0); // 8 parties
+
+    for (let r = 0; r < currentRows.length; r++) {
+      for (let c = 1; c < 9; c++) {
+        totals[c - 1] += Number(currentRows[r][c] || 0);
+      }
+    }
+    console.log(totals)
+    return totals;
+  };
+
   const startPlayTopLoop = () => {
     if (!rowsRef.current.length) return;
 
-    const rowSequence = [0];
+    const rowSequence = [0, 1];
     let seqIndex = 0;
 
     const playRow = (rowNO) => {
@@ -142,20 +156,30 @@ export default function SheetTable() {
       if (!currentRows[rowNO]) return;
 
       let xml = '';
-
-      xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
-
-      const seat = getSeat(currentRows[rowNO]);
-
-      xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\" /></componentData>`;
-
-      for (let i = 1; i < 9; i++) {
-        xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
-        xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
+      if (rowNO === 0) {
+        xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
+        const seat = getSeat(currentRows[rowNO]);
+        xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\" /></componentData>`;
+        for (let i = 1; i < 9; i++) {
+          xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+          xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
+        }
       }
+      else {
+        xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${'महाराष्ट्र'}\\" /></componentData>`;
+        const seat = getPartyTotals().reduce((a, b) => a + Number(b || 0), 0);
+        const totalAvailableSeats = currentRows.reduce(
+          (sum, row) => sum + Number(row[9] || 0),
+          0
+        );
 
+        xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${totalAvailableSeats}\\" /></componentData>`;
+        for (let i = 1; i < 9; i++) {
+          xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+          xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${getPartyTotals()[i - 1]}\\" /></componentData>`;
+        }
+      }
       xml = `"<templateData>${xml}</templateData>"`;
-
       endpoint({
         action: "endpoint",
         command: `cg 1-96 add 96 "mhmceletion2026/top/top" 1 ${xml}`
