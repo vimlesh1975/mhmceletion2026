@@ -45,7 +45,36 @@ export default function SheetTable() {
     formrowsRef.current = formrows;
   }, [formrows]);
 
+  const saveRowsToFile = () => {
+    const blob = new Blob([JSON.stringify(rows, null, 2)], {
+      type: "application/json",
+    });
 
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "rows-backup.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
+
+  const loadRowsFromFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const json = JSON.parse(event.target.result);
+        setRows(json);
+      } catch {
+        alert("Invalid JSON file");
+      }
+    };
+    reader.readAsText(file);
+  };
 
 
 
@@ -572,6 +601,18 @@ export default function SheetTable() {
               command: `cg 1-99 stop 99`
             });
           }}>Stop</button>
+        </div>
+        <div style={{ border: '1px solid red' }}>
+          <h3>Save , Open</h3>
+
+          <button onClick={saveRowsToFile}>Save Rows JSON</button>
+
+          <input
+            type="file"
+            accept="application/json"
+            onChange={loadRowsFromFile}
+          />
+
         </div>
       </div>
 
