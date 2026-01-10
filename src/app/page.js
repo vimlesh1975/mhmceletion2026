@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import "./page.css"
 
 const headers = [
-  "district/party",
+  "Municipal/Party",
   "भाजप",
   "शिवसेना",
   "राष्ट्रवादी",
@@ -449,8 +449,8 @@ export default function SheetTable() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, rIdx) => (
-                <tr key={rIdx}>
+              {rows.slice(1).map((row, rIdx) => (
+                <tr key={rIdx + 1}>
                   <td>{rIdx + 1}</td>
                   {row.map((cell, cIdx) => (
                     <td key={cIdx}>
