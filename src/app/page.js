@@ -449,35 +449,41 @@ export default function SheetTable() {
               </tr>
             </thead>
             <tbody>
-              {rows.slice(1).map((row, rIdx) => (
-                <tr key={rIdx + 1}>
-                  <td>{rIdx + 1}</td>
-                  {row.map((cell, cIdx) => (
-                    <td key={cIdx}>
-                      <input
-                        type="text"
-                        value={cell}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setRows(prev => {
-                            const copy = [...prev];
-                            copy[rIdx] = [...copy[rIdx]];
-                            copy[rIdx][cIdx] = value;
-                            return copy;
-                          });
-                        }}
-                        style={{
-                          width: cIdx === 0 ? "140px" : "50px",
-                          border: "none",
-                          outline: "none",
-                          background: "transparent",
-                          textAlign: cIdx === 0 ? "left" : "center"
-                        }}
-                      />
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              {rows.slice(1).map((row, rIdx) => {
+                const realIndex = rIdx + 1;
+
+                return (
+                  <tr key={realIndex}>
+                    <td>{realIndex}</td>
+
+                    {row.map((cell, cIdx) => (
+                      <td key={cIdx}>
+                        <input
+                          type="text"
+                          value={cell}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setRows(prev => {
+                              const copy = [...prev];
+                              copy[realIndex] = [...copy[realIndex]];
+                              copy[realIndex][cIdx] = value;
+                              return copy;
+                            });
+                          }}
+                          style={{
+                            width: cIdx === 0 ? "140px" : "50px",
+                            border: "none",
+                            outline: "none",
+                            background: "transparent",
+                            textAlign: cIdx === 0 ? "left" : "center"
+                          }}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+
             </tbody>
 
           </table>
