@@ -174,6 +174,7 @@ export default function SheetTable() {
   };
 
   const startPlayTopLoop = () => {
+    let firstTime = 0;
     if (!rowsRef.current.length) return;
 
     const rowSequence = [0, 1];
@@ -208,10 +209,22 @@ export default function SheetTable() {
         }
       }
       xml = `"<templateData>${xml}</templateData>"`;
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-96 add 96 "mhmceletion2026/top/top" 1 ${xml}`
-      });
+
+      if (firstTime === 0) {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-96 add 96 "mhmceletion2026/top/top" 1 ${xml}`
+        });
+      }
+      else {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-96 update 96 ${xml}`
+        });
+      }
+
+      firstTime = 1;
+
     };
 
     // ▶️ immediate
@@ -231,6 +244,8 @@ export default function SheetTable() {
 
 
   const startPlayLeftLoop = () => {
+    let firstTime = 0;
+
     if (!rowsRef.current.length) return;
 
     // 👇 ONLY rows you are sure exist
@@ -250,10 +265,20 @@ export default function SheetTable() {
         xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i] ?? ""}\\" /></componentData>`;
       }
       xml = `"<templateData>${xml}</templateData>"`;
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-97 add 97 "mhmceletion2026/left/left" 1 ${xml}`
-      });
+
+      if (firstTime === 0) {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-97 add 97 "mhmceletion2026/left/left" 1 ${xml}`
+        });
+      }
+      else {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-97 update 97  ${xml}`
+        });
+      }
+      firstTime = 1;
     };
 
     // ▶️ play first row immediately
@@ -272,6 +297,8 @@ export default function SheetTable() {
 
 
   const startPlayRightLoop = () => {
+    let firstTime = 0;
+
     if (!rowsRef.current.length) return;
 
 
@@ -295,15 +322,26 @@ export default function SheetTable() {
       }
       xml = `"<templateData>${xml}</templateData>"`
       const templateName = 'mhmceletion2026/left/left';
-      endpoint({
-        action: "endpoint",
-        command: `mixer 1-98 fill 0.78 0 1 1`
-      });
 
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
-      });
+      if (firstTime === 0) {
+        endpoint({
+          action: "endpoint",
+          command: `mixer 1-98 fill 0.78 0 1 1`
+        });
+
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
+        });
+      }
+      else {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-98 update 98  ${xml}`
+        });
+      }
+      firstTime = 1;
+
     }
 
     // ▶️ play first row immediately
@@ -321,6 +359,8 @@ export default function SheetTable() {
 
 
   const startPlayBottomLoop = () => {
+    let firstTime = 0;
+
     if (!rowsRef.current.length) return;
 
 
@@ -363,10 +403,21 @@ export default function SheetTable() {
 
       xml = `"<templateData>${xml}</templateData>"`;
 
-      endpoint({
-        action: "endpoint",
-        command: `cg 1-99 add 99 "mhmceletion2026/bottom/bottom" 1 ${xml}`
-      });
+
+      if (firstTime === 0) {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-99 add 99 "mhmceletion2026/bottom/bottom" 1 ${xml}`
+        });
+      }
+      else {
+        endpoint({
+          action: "endpoint",
+          command: `cg 1-99 update 99  ${xml}`
+        });
+      }
+      firstTime = 1;
+
     };
 
     // ▶️ Play first page immediately
