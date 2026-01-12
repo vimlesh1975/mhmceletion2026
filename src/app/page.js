@@ -24,6 +24,7 @@ const bottomtTimerDuration = 5000;
 
 
 export default function SheetTable() {
+  const [bgColor, setBGColor] = useState('#00ff00');
   const [rows, setRows] = useState([]);
   const [formrows, setFormRows] = useState([]);
   const [polling, setPolling] = useState(false);
@@ -326,14 +327,9 @@ export default function SheetTable() {
         xml += `<componentData id=\\"${'ccgp' + i + 's'}\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
       }
       xml = `"<templateData>${xml}</templateData>"`
-      const templateName = 'mhmceletion2026/left/left';
+      const templateName = 'mhmceletion2026/right/right';
 
       if (firstTime === 0) {
-        endpoint({
-          action: "endpoint",
-          command: `mixer 1-98 fill 0.78 0 1 1`
-        });
-
         endpoint({
           action: "endpoint",
           command: `cg 1-98 add 98 "${templateName}" 1 ${xml}`
@@ -684,6 +680,10 @@ export default function SheetTable() {
           <button onClick={() => {
             sendToCaspar(`play 1-1 big_photo_bg loop`)
           }}>Play BG</button>
+          <input type="color" value={bgColor} onChange={(e) => {
+            setBGColor(e.target.value);
+            sendToCaspar(`play 1-1 ${e.target.value}`);
+          }} />
 
         </div>
 
