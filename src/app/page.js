@@ -449,12 +449,12 @@ export default function SheetTable() {
               </tr>
             </thead>
             <tbody>
-              {rows.slice(1).map((row, rIdx) => {
-                const realIndex = rIdx + 1;
+              {rows.map((row, rIdx) => {
+                const realIndex = rIdx;
 
                 return (
                   <tr key={realIndex}>
-                    <td>{realIndex}</td>
+                    <td>{realIndex + 1}</td>
 
                     {row.map((cell, cIdx) => (
                       <td key={cIdx}>
