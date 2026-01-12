@@ -17,6 +17,11 @@ const headers = [
   "Total"
 ];
 
+const topTimerDuration = 5000;
+const leftTimerDuration = 5000;
+const RightTimerDuration = 5000;
+const bottomtTimerDuration = 5000;
+
 
 export default function SheetTable() {
   const [rows, setRows] = useState([]);
@@ -239,7 +244,7 @@ export default function SheetTable() {
     topIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
       playRow(rowSequence[seqIndex]);
-    }, 5000);
+    }, topTimerDuration);
   };
 
 
@@ -292,7 +297,7 @@ export default function SheetTable() {
     leftIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
       playRow(rowSequence[seqIndex]);
-    }, 5000);
+    }, leftTimerDuration);
   };
 
 
@@ -354,7 +359,7 @@ export default function SheetTable() {
     rightIntervalRef.current = setInterval(() => {
       seqIndex = (seqIndex + 1) % rowSequence.length;
       playRow(rowSequence[seqIndex]);
-    }, 5000);
+    }, RightTimerDuration);
   };
 
 
@@ -432,7 +437,7 @@ export default function SheetTable() {
       pageIndex += ROWS_PER_PAGE;
       if (pageIndex >= rowSequence.length) pageIndex = 0;
       playPage(pageIndex);
-    }, 5000);
+    }, bottomtTimerDuration);
   };
 
 
@@ -677,7 +682,7 @@ export default function SheetTable() {
         <div style={{ border: '1px solid red' }}>
           <label>Test</label>
           <button onClick={() => {
-            sendToCaspar(`play 1-1 amb loop`)
+            sendToCaspar(`play 1-1 big_photo_bg loop`)
           }}>Play BG</button>
 
         </div>
