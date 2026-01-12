@@ -12,7 +12,7 @@ export async function GET() {
         const sheets = google.sheets({ version: "v4", auth });
 
         const SHEET_ID = "1c2uaAxetGTFXmQ2A9jm-ZMcW9-smVVCFZkohnuA3DH8";
-        const RANGE = "Sheet1!C4:L32";   // ⚠️ use sheet name
+        const RANGE = "Sheet1!C4:M32";   // ⚠️ use sheet name
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId: SHEET_ID,

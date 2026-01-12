@@ -103,6 +103,8 @@ export default function SheetTable() {
     const data = await res.json();
     setRows(data);
   };
+
+
   useEffect(() => {
     fetchSheet();
   }, [])
@@ -119,12 +121,45 @@ export default function SheetTable() {
     fetchformSheet();
   }, [])
 
+  // const fetchSheetenabledonly = async () => {
+  //   const res = await fetch("/api/google-sheet");
+  //   const data = await res.json();
+  //   console.log(data)
+  //   setRows(data);
+  // };
+
+  const fetchSheetenabledonly = async () => {
+    const res = await fetch("/api/google-sheet");
+    const data = await res.json();
+
+    // rows having last column = 1
+    const enabledRows = data.filter(
+      r => String(r[r.length - 1]) === "1"
+    );
+
+    setRows(prevRows => {
+      const updated = [...prevRows];
+
+      enabledRows.forEach(newRow => {
+        const name = newRow[0]; // municipal name
+
+        const index = updated.findIndex(r => r[0] === name);
+
+        if (index !== -1) {
+          updated[index] = newRow;   // 🔁 replace only that row
+        }
+      });
+
+      return updated;
+    });
+  };
+
 
 
   useEffect(() => {
     // 🔁 START polling
     if (polling) {
-      intervalRef.current = setInterval(fetchSheet, 5000);
+      intervalRef.current = setInterval(fetchSheetenabledonly, 5000);
     }
 
     // 🛑 STOP polling
