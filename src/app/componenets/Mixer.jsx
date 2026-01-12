@@ -10,13 +10,13 @@ const Mixer = ({ sendToCaspar, layer }) => {
     sendToCaspar(`mixer 1-${layer} fill ${x} ${y} ${scaleX} ${scaleY} `);
   }, [x, y, scaleX, scaleY, layer])
   return (
-    <div style={{ border: '1px solid red', margin: 10 }}>
+    <div style={{ border: '1px solid blue', margin: 10 }}>
       {/* <label>Mixer fill: </label> */}
-      <div>
+      <div style={{ marginLeft: 30 }}>
         <label>X: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={x} onChange={e => {
           setX(e.target.value);
         }} />
-        <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={y} onChange={e => {
+        <label style={{ marginLeft: 32 }}>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={y} onChange={e => {
           setY(e.target.value);
         }
         } />
