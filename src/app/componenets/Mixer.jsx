@@ -1,0 +1,46 @@
+import React, { useEffect, useState } from 'react'
+
+const Mixer = ({ sendToCaspar, layer }) => {
+  const [x, setX] = useState(0.00);
+  const [y, setY] = useState(0.00);
+  const [scaleX, setScaleX] = useState(1.00);
+  const [scaleY, setScaleY] = useState(1.00);
+
+  useEffect(() => {
+    sendToCaspar(`mixer 1-${layer} fill ${x} ${y} ${scaleX} ${scaleY} `);
+  }, [x, y, scaleX, scaleY, layer])
+  return (
+    <div style={{ border: '1px solid red', margin: 10 }}>
+      {/* <label>Mixer fill: </label> */}
+      <div>
+        <label>X: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={x} onChange={e => {
+          setX(e.target.value);
+        }} />
+        <label>Y: </label> <input max={2} step="0.01" style={{ width: 50 }} type='number' value={y} onChange={e => {
+          setY(e.target.value);
+        }
+        } />
+      </div>
+      <div>
+        <label>scaleX: </label> <input step="0.01" style={{ width: 50 }} type='number' value={scaleX} onChange={e => {
+          setScaleX(e.target.value);
+        }} />
+        <label>scaleY: </label> <input step="0.01" style={{ width: 50 }} type='number' value={scaleY} onChange={e => {
+          setScaleY(e.target.value);
+        }} />
+      </div>
+
+      <div>
+        <button onClick={() => {
+          setX(0);
+          setY(0);
+          setScaleX(1);
+          setScaleY(1);
+        }}> Reset</button>
+      </div>
+
+    </div>
+  )
+}
+
+export default Mixer

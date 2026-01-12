@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from "react";
+import Mixer from "./componenets/Mixer";
 import "./page.css"
 
 const headers = [
@@ -88,8 +89,6 @@ export default function SheetTable() {
       body: JSON.stringify(str),
     };
     await fetch('/api/casparcg', requestOptions);
-    if (str.action === 'connect' || str.action === 'disconnect') {
-    }
   };
 
 
@@ -490,7 +489,7 @@ export default function SheetTable() {
         </div>
       </div>
 
-      <div style={{ minWidth: 150 }}>
+      <div style={{ minWidth: 250 }}>
         <button onClick={fetchSheet}>Read Once</button>
         <label style={{ display: "block", marginBottom: 8 }}>
           <input
@@ -525,7 +524,8 @@ export default function SheetTable() {
         }}>Stop All</button>
 
         <div style={{ border: '1px solid red' }}>
-          <h3> Top</h3>
+          <label> Top</label>
+          <Mixer sendToCaspar={sendToCaspar} layer={96} />
           <button onClick={() => {
             startPlayTopLoop();
 
@@ -549,7 +549,9 @@ export default function SheetTable() {
         </div>
 
         <div style={{ border: '1px solid red' }}>
-          <h3> Left</h3>
+          <label> Left</label>
+          <Mixer sendToCaspar={sendToCaspar} layer={97} />
+
           <button onClick={() => {
             startPlayLeftLoop()
 
@@ -568,7 +570,8 @@ export default function SheetTable() {
 
         </div>
         <div style={{ border: '1px solid red' }}>
-          <h3> Right</h3>
+          <label> Right</label>
+          <Mixer sendToCaspar={sendToCaspar} layer={98} />
 
           <button onClick={() => {
             startPlayRightLoop();
@@ -588,7 +591,9 @@ export default function SheetTable() {
         </div>
 
         <div style={{ border: '1px solid red' }}>
-          <h3> Bottom</h3>
+          <label> Bottom</label>
+          <Mixer sendToCaspar={sendToCaspar} layer={99} />
+
           <button onClick={() => {
             startPlayBottomLoop();
           }}>Play Bottom</button>
@@ -609,7 +614,7 @@ export default function SheetTable() {
           }}>Stop</button>
         </div>
         <div style={{ border: '1px solid red' }}>
-          <h3>Save , Open</h3>
+          <label>Save , Open</label>
           <button onClick={saveRowsToFile}>Save Rows JSON</button>
           <input
             type="file"
@@ -619,7 +624,7 @@ export default function SheetTable() {
         </div>
 
         <div style={{ border: '1px solid red' }}>
-          <h3>Test</h3>
+          <label>Test</label>
           <button onClick={() => {
             sendToCaspar(`play 1-1 amb loop`)
           }}>Play BG</button>
