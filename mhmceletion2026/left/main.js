@@ -36,6 +36,43 @@ scriptgsap.onload = function () {
                 delay: index * 0.03,
                 ease: "",
             });
+
+// setInterval(() => {
+//      gsap.fromTo(element,
+// {
+//   scale: 0.5,
+//   opacity: 0,
+//   transformOrigin: "center"
+// },
+// {
+//   scale: 1,
+//   opacity: 1,
+//   duration: 0.6,
+//   delay: index * 0.04,
+//   ease: "back.out(1.7)"
+// });
+// }, 5000);
+           
+
+
+// const tl = gsap.timeline({
+//   repeat: -1,
+//   repeatDelay: 5
+// });
+
+// tl.fromTo(element,
+// {
+//   filter: "blur(20px)",
+//   opacity: 0
+// },
+// {
+//   filter: "blur(0px)",
+//   opacity: 1,
+//   duration: 0.6,
+//   ease: "power2.out"
+// });
+
+
         });
 
         outAnimation = () => {
