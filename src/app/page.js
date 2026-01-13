@@ -757,8 +757,23 @@ export default function SheetTable() {
             sendToCaspar(`cg 2-100 stop 100`)
 
           }}>Full Frame stop</button>
+
+
         </div>
 
+        <div style={{ border: '1px solid red' }}>
+          Branding
+          <Mixer sendToCaspar={sendToCaspar} layer={101} />
+
+          <button onClick={() => {
+            sendToCaspar(`cg 1-101 add 101 "mhmceletion2026/branding/branding" 1`)
+          }}>Branding Play</button>
+
+          <button onClick={() => {
+            sendToCaspar(`cg 1-101 stop 101`)
+          }}>Branding Stop</button>
+
+        </div>
       </div>
 
       <div>
