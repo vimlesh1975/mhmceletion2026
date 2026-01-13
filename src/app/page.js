@@ -28,6 +28,7 @@ export default function SheetTable() {
   const [rows, setRows] = useState([]);
   const [formrows, setFormRows] = useState([]);
   const [polling, setPolling] = useState(false);
+  const [selectedMc, setSelectedMc] = useState('मुंबई');
 
   const [autoreadresponse, setautoreadresponse] = useState(false);
   const [autoWriteresponse, setautoWriteresponse] = useState(false);
@@ -41,6 +42,8 @@ export default function SheetTable() {
 
   const autoReadIntervalRef = useRef(null);
   const autoWriteIntervalRef = useRef(null);
+
+
 
   const rowsRef = useRef([]);
   useEffect(() => {
@@ -214,6 +217,27 @@ export default function SheetTable() {
     return totals;
   };
 
+
+  const playFullFrame = ({ rowNO }) => {
+    // const rowNO = 5;
+    const currentRows = rowsRef.current;
+
+    if (!currentRows[rowNO]) return; // 🛡️ CRITICAL SAFETY
+    let xml = '';
+    xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][0]}\\" /></componentData>`;
+    const seat = getSeat(currentRows[rowNO]);
+    xml += `<componentData id=\\"ccgc1s\\"><data id=\\"text\\" value=\\"${seat}/${currentRows[rowNO][9]}\\" /></componentData>`;
+    for (let i = 1; i < 9; i++) {
+      xml += `<componentData id=\\"ccgp${i}n\\"><data id=\\"text\\" value=\\"${headers[i]}\\" /></componentData>`;
+      xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i] ?? ""}\\" /></componentData>`;
+    }
+    xml = `"<templateData>${xml}</templateData>"`;
+
+    endpoint({
+      action: "endpoint",
+      command: `cg 1-100 add 100 "mhmceletion2026/full_frame/full_frame" 1 ${xml}`
+    });
+  }
   const startPlayTopLoop = () => {
     let firstTime = 0;
     if (!rowsRef.current.length) return;
@@ -540,10 +564,16 @@ export default function SheetTable() {
 
                 return (
                   <tr key={realIndex}>
-                    <td>{realIndex + 1}</td>
+                    <td onDoubleClick={() => {
+                      playFullFrame({ rowNO: realIndex })
+                    }}>{realIndex + 1}
+                      {/* <button onClick={() => {
+                        playFullFrame({ rowNO: realIndex })
+                      }}>.</button> */}
+                    </td>
 
                     {row.map((cell, cIdx) => (
-                      <td key={cIdx}>
+                      <td key={cIdx} >
                         <input
                           type="text"
                           value={cell}
@@ -720,6 +750,11 @@ export default function SheetTable() {
             sendToCaspar(`play 1-1 ${e.target.value}`);
           }} />
 
+
+          <button onClick={() => {
+            playFullFrame({ rowNO: 8 });
+
+          }}>Full Frame</button>
         </div>
 
       </div>
