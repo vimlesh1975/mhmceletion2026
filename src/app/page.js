@@ -28,7 +28,6 @@ export default function SheetTable() {
   const [rows, setRows] = useState([]);
   const [formrows, setFormRows] = useState([]);
   const [polling, setPolling] = useState(false);
-  const [selectedMc, setSelectedMc] = useState('मुंबई');
 
   const [autoreadresponse, setautoreadresponse] = useState(false);
   const [autoWriteresponse, setautoWriteresponse] = useState(false);
@@ -243,7 +242,7 @@ export default function SheetTable() {
     let firstTime = 0;
     if (!rowsRef.current.length) return;
 
-    const rowSequence = [0, 1];
+    const rowSequence = [0, 0, 0, 0, 1];
     let seqIndex = 0;
 
     const playRow = (rowNO) => {
@@ -663,8 +662,6 @@ export default function SheetTable() {
               command: `cg 1-96 stop 96`
             });
           }}>Stop</button>
-
-
 
         </div>
 
