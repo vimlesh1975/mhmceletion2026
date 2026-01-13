@@ -3,7 +3,7 @@ filter1.innerHTML = '<filter id="filter1" x="0" y="0" width="100%" height="100%"
 var allRectangles = document.getElementsByTagName('rect');
 
 Array.from(allRectangles).forEach((element) => {
-    element.style.filter = 'url(#filter1)';
+  element.style.filter = 'url(#filter1)';
 });
 
 const scriptgsap = document.createElement("script");
@@ -14,86 +14,77 @@ var elements = document.querySelectorAll('rect, image, text, path, circle');
 
 
 scriptgsap.onload = function () {
-    setTimeout(() => {
-// timeout is nessaesaary to set all variable set by client.
-        const sortedElements = Array.from(elements).sort(function (a, b) {
-            return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
-        });
+  setTimeout(() => {
+    // timeout is nessaesaary to set all variable set by client.
+    const sortedElements = Array.from(elements).sort(function (a, b) {
+      return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+    });
 
-        document.body.style.opacity = 1;
-        sortedElements.forEach((element, index) => {
-            var pathTransform=0;
-            if (element.tagName==='path'){
-                 pathTransform=element.transform.animVal[0].matrix.e
-            }
-            // console.log(element.transform.animVal[0].matrix.e)
-            const scalefactor = element.parentNode.getCTM().a;
-            gsap.set(element, { x: -2100 / scalefactor, opacity: 0 });
-            gsap.to(element, {
-                x: (element.tagName==='path')?pathTransform:0,
+    document.body.style.opacity = 1;
+    sortedElements.forEach((element, index) => {
+      var pathTransform = 0;
+      if (element.tagName === 'path') {
+        pathTransform = element.transform.animVal[0].matrix.e
+      }
+      // console.log(element.transform.animVal[0].matrix.e)
+      const scalefactor = element.parentNode.getCTM().a;
+      gsap.set(element, { x: -2100 / scalefactor, opacity: 0 });
+      gsap.to(element, {
+        x: (element.tagName === 'path') ? pathTransform : 0,
+        opacity: 1,
+        duration: 0.5,
+        delay: index * 0.03,
+        ease: "",
+      });
+    });
+
+
+    const originalUpdate = window.update;
+    window.update = function (str) {
+      if (originalUpdate) originalUpdate(str);
+      sortedElements.forEach((element, index) => {
+        if (element.tagName === 'text') {
+          const value = element.textContent.trim();
+          // check numeric
+          if (!isNaN(value) && value !== "") {
+            gsap.fromTo(element,
+              {
+                scale: 0.5,
+                opacity: 0,
+                transformOrigin: "center"
+              },
+              {
+                scale: 1,
                 opacity: 1,
-                duration: 0.5,
-                delay: index * 0.03,
-                ease: "",
-            });
+                duration: 0.6,
+                delay: index * 0.01,
+                ease: "back.out(1.7)"
+              });
 
-// setInterval(() => {
-//      gsap.fromTo(element,
-// {
-//   scale: 0.5,
-//   opacity: 0,
-//   transformOrigin: "center"
-// },
-// {
-//   scale: 1,
-//   opacity: 1,
-//   duration: 0.6,
-//   delay: index * 0.04,
-//   ease: "back.out(1.7)"
-// });
-// }, 5000);
-           
-
-
-// const tl = gsap.timeline({
-//   repeat: -1,
-//   repeatDelay: 5
-// });
-
-// tl.fromTo(element,
-// {
-//   filter: "blur(20px)",
-//   opacity: 0
-// },
-// {
-//   filter: "blur(0px)",
-//   opacity: 1,
-//   duration: 0.6,
-//   ease: "power2.out"
-// });
-
-
-        });
-
-        outAnimation = () => {
-            sortedElements.forEach((element, index) => {
-                const scalefactor = element.parentNode.getCTM().a;
-                gsap.set(element, { x: -2100 / scalefactor, opacity: 0 });
-                gsap.from(element, {
-                    x: 0,
-                    opacity: 1,
-                    duration: 0.5,
-                    delay: (sortedElements.length - index - 1) * 0.03,
-                    ease: "power2.out"
-                });
-            });
-
+          }
         }
-    }, 100);
+      });
+    }
 
-    // setTimeout(() => {
-    //     outAnimation();
-    // }, 4000);
+    outAnimation = () => {
+      sortedElements.forEach((element, index) => {
+        const scalefactor = element.parentNode.getCTM().a;
+        gsap.set(element, { x: -2100 / scalefactor, opacity: 0 });
+        gsap.from(element, {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          delay: (sortedElements.length - index - 1) * 0.03,
+          ease: "power2.out"
+        });
+      });
+
+    }
+  }, 100);
+
+  // setTimeout(() => {
+  //     outAnimation();
+  // }, 4000);
 };
 
 

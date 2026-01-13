@@ -15,29 +15,54 @@ var elements = document.querySelectorAll('rect, image, text, path, circle');
 
 scriptgsap.onload = function () {
     setTimeout(() => {
-// timeout is nessaesaary to set all variable set by client.
+        // timeout is nessaesaary to set all variable set by client.
         const sortedElements = Array.from(elements).sort(function (a, b) {
             return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
         });
 
         document.body.style.opacity = 1;
         sortedElements.forEach((element, index) => {
-            var pathTransform=0;
-            if (element.tagName==='path'){
-                 pathTransform=element.transform.animVal[0].matrix.e
+            var pathTransform = 0;
+            if (element.tagName === 'path') {
+                pathTransform = element.transform.animVal[0].matrix.e
             }
             // console.log(element.transform.animVal[0].matrix.e)
             const scalefactor = element.parentNode.getCTM().a;
             gsap.set(element, { x: -2100 / scalefactor, opacity: 0 });
             gsap.to(element, {
-                x: (element.tagName==='path')?pathTransform:0,
+                x: (element.tagName === 'path') ? pathTransform : 0,
                 opacity: 1,
                 duration: 0.5,
                 delay: index * 0.03,
                 ease: "",
             });
         });
+        const originalUpdate = window.update;
+        window.update = function (str) {
+            if (originalUpdate) originalUpdate(str);
+            sortedElements.forEach((element, index) => {
+                if (element.tagName === 'text') {
+                    const value = element.textContent.trim();
+                    // check numeric
+                    if (!isNaN(value) && value !== "") {
+                        gsap.fromTo(element,
+                            {
+                                scale: 0.5,
+                                opacity: 0,
+                                transformOrigin: "center"
+                            },
+                            {
+                                scale: 1,
+                                opacity: 1,
+                                duration: 0.1,
+                                delay: index * 0.01,
+                                ease: "back.out(1.7)"
+                            });
 
+                    }
+                }
+            });
+        }
         outAnimation = () => {
             sortedElements.forEach((element, index) => {
                 const scalefactor = element.parentNode.getCTM().a;
