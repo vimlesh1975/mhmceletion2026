@@ -235,7 +235,8 @@ export default function SheetTable() {
 
     endpoint({
       action: "endpoint",
-      command: `cg 1-100 add 100 "mhmceletion2026/full_frame/full_frame" 1 ${xml}`
+      // command: `cg 1-100 add 100 "mhmceletion2026/full_frame/full_frame" 1 ${xml}`
+      command: `cg 2-100 add 100 "mhmceletion2026/full_frame/full_frame" 1 ${xml}`
     });
   }
   const startPlayTopLoop = () => {
@@ -567,9 +568,9 @@ export default function SheetTable() {
                     <td onDoubleClick={() => {
                       playFullFrame({ rowNO: realIndex })
                     }}>{realIndex + 1}
-                      {/* <button onClick={() => {
+                      {/* <button style={{ fontSize: 10 }} onClick={() => {
                         playFullFrame({ rowNO: realIndex })
-                      }}>.</button> */}
+                      }}>FF</button> */}
                     </td>
 
                     {row.map((cell, cIdx) => (
@@ -595,7 +596,9 @@ export default function SheetTable() {
                           }}
                         />
                       </td>
+
                     ))}
+
                   </tr>
                 );
               })}
@@ -752,9 +755,11 @@ export default function SheetTable() {
 
 
           <button onClick={() => {
-            playFullFrame({ rowNO: 8 });
+            // playFullFrame({ rowNO: 8 });
+            // sendToCaspar(`cg 1-100 stop 100`)
+            sendToCaspar(`cg 2-100 stop 100`)
 
-          }}>Full Frame</button>
+          }}>Full Frame stop</button>
         </div>
 
       </div>
