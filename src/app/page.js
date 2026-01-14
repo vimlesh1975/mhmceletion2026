@@ -42,6 +42,12 @@ export default function SheetTable() {
   const autoReadIntervalRef = useRef(null);
   const autoWriteIntervalRef = useRef(null);
 
+  const topMixerRef = useRef();
+  const leftMixerRef = useRef();
+  const rightMixerRef = useRef();
+  const bottomMixerRef = useRef();
+  const brandingMixerRef = useRef();
+
 
 
   const rowsRef = useRef([]);
@@ -641,10 +647,18 @@ export default function SheetTable() {
           }
 
         }}>Stop All</button>
+        <button onClick={() => {
+          topMixerRef.current.setScaleX(0.97);
+          // leftMixerRef.current.setX(0.1);
+          rightMixerRef.current.setY(0.1);
+          rightMixerRef.current.setScaleY(0.88);
+          // bottomMixerRef.current.setX(0.1);
+          // brandingMixerRef.current.setX(0.1);
+        }}>Set Locations</button>
 
         <div style={{ border: '1px solid red' }}>
           <label> Top</label>
-          <Mixer sendToCaspar={sendToCaspar} layer={96} />
+          <Mixer ref={topMixerRef} sendToCaspar={sendToCaspar} layer={96} />
           <button onClick={() => {
             startPlayTopLoop();
 
@@ -667,7 +681,7 @@ export default function SheetTable() {
 
         <div style={{ border: '1px solid red' }}>
           <label> Left</label>
-          <Mixer sendToCaspar={sendToCaspar} layer={97} />
+          <Mixer ref={leftMixerRef} sendToCaspar={sendToCaspar} layer={97} />
 
           <button onClick={() => {
             startPlayLeftLoop()
@@ -688,7 +702,7 @@ export default function SheetTable() {
         </div>
         <div style={{ border: '1px solid red' }}>
           <label> Right</label>
-          <Mixer sendToCaspar={sendToCaspar} layer={98} />
+          <Mixer ref={rightMixerRef} sendToCaspar={sendToCaspar} layer={98} />
 
           <button onClick={() => {
             startPlayRightLoop();
@@ -709,7 +723,7 @@ export default function SheetTable() {
 
         <div style={{ border: '1px solid red' }}>
           <label> Bottom</label>
-          <Mixer sendToCaspar={sendToCaspar} layer={99} />
+          <Mixer ref={bottomMixerRef} sendToCaspar={sendToCaspar} layer={99} />
 
           <button onClick={() => {
             startPlayBottomLoop();
@@ -763,7 +777,7 @@ export default function SheetTable() {
 
         <div style={{ border: '1px solid red' }}>
           Branding
-          <Mixer sendToCaspar={sendToCaspar} layer={101} />
+          <Mixer ref={brandingMixerRef} sendToCaspar={sendToCaspar} layer={101} />
 
           <button onClick={() => {
             sendToCaspar(`cg 1-101 add 101 "mhmceletion2026/branding/branding" 1`)

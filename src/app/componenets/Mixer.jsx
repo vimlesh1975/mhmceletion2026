@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
 
-const Mixer = ({ sendToCaspar, layer }) => {
+const Mixer = forwardRef(({ sendToCaspar, layer }, ref) => {
   const [x, setX] = useState(0.00);
   const [y, setY] = useState(0.00);
   const [scaleX, setScaleX] = useState(1.00);
   const [scaleY, setScaleY] = useState(1.00);
+
+  useImperativeHandle(ref, () => ({
+    setX,
+    setY,
+    setScaleX,
+    setScaleY,
+  }));
 
   useEffect(() => {
     sendToCaspar(`mixer 1-${layer} fill ${x} ${y} ${scaleX} ${scaleY} `);
@@ -41,6 +48,6 @@ const Mixer = ({ sendToCaspar, layer }) => {
 
     </div>
   )
-}
+})
 
 export default Mixer
