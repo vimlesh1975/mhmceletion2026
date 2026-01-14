@@ -10,8 +10,8 @@ const headers = [
   "शिवसेना",
   "राष्ट्रवादी",
   "काँग्रेस",
-  "उबाठा",
-  "श प",
+  "शिवसेना उबाठा ",
+  "राष्ट्रवादी शप",
   "मनसे",
   "इतर",
   "Total"
@@ -266,7 +266,7 @@ export default function SheetTable() {
         }
       }
       else {
-        xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${'महाराष्ट्र'}\\" /></componentData>`;
+        xml += `<componentData id=\\"ccgc1n\\"><data id=\\"text\\" value=\\"${'एकूण'}\\" /></componentData>`;
         const seat = getPartyTotals().reduce((a, b) => a + Number(b || 0), 0);
         const totalAvailableSeats = currentRows.reduce(
           (sum, row) => sum + Number(row[9] || 0),
