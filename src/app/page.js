@@ -60,6 +60,10 @@ export default function SheetTable() {
     formrowsRef.current = formrows;
   }, [formrows]);
 
+  const [autoSave, setAutoSave] = useState(false);
+  const autoSaveRef = useRef(null);
+
+
   const saveRowsToFile = () => {
     const blob = new Blob([JSON.stringify(rows, null, 2)], {
       type: "application/json",
@@ -545,6 +549,20 @@ export default function SheetTable() {
     }
   };
 
+  useEffect(() => {
+    if (autoSave) {
+      autoSaveRef.current = setInterval(() => {
+        saveRowsToFile();
+      }, 60000); // 1 minute
+    }
+
+    return () => {
+      if (autoSaveRef.current) {
+        clearInterval(autoSaveRef.current);
+        autoSaveRef.current = null;
+      }
+    };
+  }, [autoSave, rows]);
 
 
   return (<>
@@ -612,6 +630,14 @@ export default function SheetTable() {
 
       <div style={{ minWidth: 250 }}>
         <button onClick={fetchSheet}>Read Once</button>
+        <label style={{ display: 'inline' }}>
+          <input
+            type="checkbox"
+            checked={autoSave}
+            onChange={e => setAutoSave(e.target.checked)}
+          />
+          &nbsp;Auto backup 1m
+        </label>
         <label style={{ display: "block", marginBottom: 8 }}>
           <input
             type="checkbox"
@@ -620,6 +646,7 @@ export default function SheetTable() {
           />
           &nbsp;Google Sheet
         </label>
+
 
         <button onClick={() => {
           sendToCaspar(`clear 1`);
