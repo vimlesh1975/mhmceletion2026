@@ -453,10 +453,6 @@ export default function SheetTable() {
         xml += `<componentData id=\\"ccgc${block + 1}s\\"><data id=\\"text\\" value=\\"${seat}/${total}\\" /></componentData>`;
 
         for (let i = 1; i < 9; i++) {
-          xml += `<componentData id=\\"ccgp${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
-        }
-
-        for (let i = 1; i < 9; i++) {
           xml += `<componentData id=\\"ccgc${block + 1}p${i}s\\"><data id=\\"text\\" value=\\"${currentRows[rowNO][i]}\\" /></componentData>`;
         }
 
